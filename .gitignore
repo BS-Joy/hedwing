@@ -1,0 +1,27 @@
+# Dependencies
+frontend/node_modules
+backend/node_modules
+
+# Environment files
+frontend/.env
+backend/.env
+
+# Optional: Common environment file variations
+frontend/.env.local
+frontend/.env.development
+frontend/.env.test
+frontend/.env.production
+backend/.env.local
+backend/.env.development
+backend/.env.test
+backend/.env.production
+
+# OS files
+.DS_Store
+*.log
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
