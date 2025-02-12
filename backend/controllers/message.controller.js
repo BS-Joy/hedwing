@@ -1,3 +1,4 @@
+import cloudinary from "../lib/cloudinary.js";
 import messageModel from "../models/message.model.js";
 import userModel from "../models/user.model.js";
 import catchAsync from "../utils/catchAsync.js";
@@ -48,23 +49,27 @@ export const getMessages = catchAsync(async (req, res) => {
  * Send a new message
  */
 export const sendMessage = catchAsync(async (req, res) => {
-  const { message, receiverId } = req.body;
+  const { text, image } = req.body;
+  const { id: receiverId } = req.params;
+
   const senderId = req.user._id;
 
-  // Validate input
-  if (!message || !receiverId) {
-    return res.status(400).json({
-      success: false,
-      message: "Message and receiverId are required.",
-    });
+  let imageUrl;
+
+  if (image) {
+    const uploadRes = await cloudinary.uploader.upload(image);
+    imageUrl = uploadRes.secure_url;
   }
 
   // Create and save message
   const newMessage = await messageModel.create({
     senderId,
     receiverId,
-    message,
+    text,
+    image: imageUrl || "",
   });
+
+  //   realtime functionlity goes here ==> socket.io
 
   res.status(201).json({
     success: true,
