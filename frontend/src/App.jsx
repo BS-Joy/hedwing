@@ -1,10 +1,23 @@
+import { createBrowserRouter, RouterProvider } from "react-router";
+import Layout from "./components/layout/Layout";
+import Home from "./components/home/Home";
 function App() {
-  return (
-    <>
-      <h1 className="text-red-500 text-4xl">Hello world</h1>
-      <button className="btn btn-error">Error</button>
-    </>
-  );
+  const routers = createBrowserRouter([
+    {
+      // path: "/",
+      // Component: (
+
+      // ),
+      element: <Layout />,
+      children: [
+        {
+          path: "/",
+          element: <Home />,
+        },
+      ],
+    },
+  ]);
+  return <RouterProvider router={routers} />;
 }
 
 export default App;
