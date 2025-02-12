@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import { connectDB } from "./lib/db.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import messageRouter from "./routes/message.route.js";
 
 dotenv.config();
 const app = express();
@@ -14,6 +15,15 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/api/auth", authRouter);
+app.use("/api/message", messageRouter);
+
+app.use((err, req, res, next) => {
+  console.error("Error:", err.message);
+  res.status(err.status || 500).json({
+    success: false,
+    message: err.message || "Internal Server Error",
+  });
+});
 
 app.listen(5000, () => {
   console.log("server is running on port: ", port);
