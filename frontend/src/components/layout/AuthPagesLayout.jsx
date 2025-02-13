@@ -1,7 +1,7 @@
 import logo from "../../assets/hedwing-logo-v3.svg";
 import AuthImagePattern from "../AuthImagePattern";
 
-export default function AuthPagesLayout({ children, texts }) {
+export default function AuthPagesLayout({ children, title, subtitle }) {
   return (
     <div className="min-h-screen grid lg:grid-cols-2">
       {/* left side */}
@@ -16,19 +16,14 @@ export default function AuthPagesLayout({ children, texts }) {
               >
                 <img src={logo} alt="hedwing logo" />
               </div>
-              <h1 className="text-2xl font-bold mt-2">Create Account</h1>
-              <p className="text-base-content/60">
-                Get started with your free account
-              </p>
+              <h1 className="text-2xl font-bold mt-2">{title}</h1>
+              <p className="text-base-content/60">{subtitle}</p>
             </div>
           </div>
           {children}
         </div>
       </div>
-      <AuthImagePattern
-        title={"Join Our Community"}
-        subtitle={"Connet with the close ones in online."}
-      />
+      <AuthImagePattern title={title} subtitle={subtitle} />
     </div>
   );
 }

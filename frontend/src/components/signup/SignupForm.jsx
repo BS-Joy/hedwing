@@ -4,7 +4,7 @@ import InputFieldWrapper from "../form/InputFieldWrapper";
 import { useAuthStore } from "../../store/useAuthStore";
 
 export default function SignupForm() {
-  const { signupLoading } = useAuthStore();
+  const { signUp, signupLoading } = useAuthStore();
   const {
     register,
     handleSubmit,
@@ -12,7 +12,7 @@ export default function SignupForm() {
   } = useForm();
 
   const handleFormSubmit = (data) => {
-    console.log(data);
+    signUp(data);
   };
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">

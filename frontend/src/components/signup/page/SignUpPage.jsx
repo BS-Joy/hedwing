@@ -6,7 +6,10 @@ import AuthImagePattern from "../../AuthImagePattern";
 
 export default function SignUpPage() {
   return (
-    <AuthPagesLayout>
+    <AuthPagesLayout
+      title="Join Our Community"
+      subtitle="Connet with the close ones in online."
+    >
       <SignupForm />
       <div className="text-center">
         <p className="text-base-content/60">

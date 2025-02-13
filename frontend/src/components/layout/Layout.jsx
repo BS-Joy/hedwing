@@ -12,7 +12,7 @@ export default function Layout() {
 
   if (isCheckingAuth) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex justify-center items-center">
         <span className="loading loading-ring loading-xl"></span>
       </div>
     );
@@ -23,9 +23,9 @@ export default function Layout() {
   }
 
   return (
-    <>
+    <div>
       <Navbar />
       <Outlet />
-    </>
+    </div>
   );
 }

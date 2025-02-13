@@ -1,10 +1,13 @@
 import React, { useEffect } from "react";
 import { Navigate, Outlet } from "react-router";
 import { useAuthStore } from "../../store/useAuthStore";
-import ErrorPage from "../ErrorPage";
+import { Cookies } from "react-cookie";
 
 export default function PublicLayout() {
   const { authUser, checkAuth, isCheckingAuth, authError } = useAuthStore();
+  const cookies = new Cookies();
+
+  const token = cookies.get("jwt");
 
   useEffect(() => {
     checkAuth(); // Ensure checkAuth is stable in the store
@@ -17,10 +20,6 @@ export default function PublicLayout() {
       </div>
     );
   }
-
-  //   if (authError) {
-  //     return <ErrorPage errorProp="Something went wrong on authentication!" />;
-  //   }
 
   if (authUser) {
     return <Navigate to="/" replace />;
