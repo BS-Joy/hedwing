@@ -2,9 +2,11 @@ import { useEffect } from "react";
 import { Navigate, Outlet } from "react-router";
 import { useAuthStore } from "../../store/useAuthStore";
 import Navbar from "./Navbar";
+import { useThemeStore } from "../../store/useThemeStore";
 
 export default function Layout() {
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
+  const { theme } = useThemeStore();
 
   useEffect(() => {
     checkAuth();
@@ -22,8 +24,10 @@ export default function Layout() {
     return <Navigate to="/login" replace />;
   }
 
+  console.log(theme);
+
   return (
-    <div>
+    <div data-theme={theme}>
       <Navbar />
       <Outlet />
     </div>

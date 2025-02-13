@@ -6,6 +6,8 @@ import SignUpPage from "./components/signup/SignUpPage";
 import ErrorPage from "./components/ErrorPage";
 import LogInPage from "./components/login/LogInPage";
 import ProfilePage from "./components/profile/ProfilePage";
+import SettingsPage from "./components/setting/SettingPage";
+
 function App() {
   const routers = createBrowserRouter([
     {
@@ -35,6 +37,10 @@ function App() {
           element: <LogInPage />,
         },
       ],
+    },
+    {
+      path: "/settings",
+      element: <SettingsPage />,
     },
     {
       path: "*", // Catch-all route for 404 errors
