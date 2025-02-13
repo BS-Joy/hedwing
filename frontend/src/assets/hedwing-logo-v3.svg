@@ -1,0 +1,37 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <circle cx="100" cy="100" r="90" fill="#1E293B"/>
+  
+  <!-- Owl face - white base -->
+  <circle cx="100" cy="100" r="60" fill="white"/>
+  
+  <!-- Eyes -->
+  <circle cx="75" cy="90" r="20" fill="#1E293B"/>
+  <circle cx="125" cy="90" r="20" fill="#1E293B"/>
+  
+  <!-- Inner eyes -->
+  <circle cx="75" cy="90" r="12" fill="#FCD34D"/>
+  <circle cx="125" cy="90" r="12" fill="#FCD34D"/>
+  
+  <!-- Eye shine -->
+  <circle cx="71" cy="86" r="4" fill="white"/>
+  <circle cx="121" cy="86" r="4" fill="white"/>
+  
+  <!-- Beak -->
+  <path d="M 90 105 
+           Q 100 110, 110 105
+           Q 100 120, 90 105" 
+        fill="#FCD34D"/>
+  
+  <!-- Message bubble integrated into design -->
+  <path d="M 140 60
+           L 170 40
+           Q 175 38, 173 43
+           L 155 60"
+        fill="white"/>
+  
+  <!-- Feather details -->
+  <path d="M 60 130 Q 100 140, 140 130" fill="none" stroke="white" stroke-width="3"/>
+  <path d="M 50 140 Q 100 150, 150 140" fill="none" stroke="white" stroke-width="3"/>
+  <path d="M 45 150 Q 100 160, 155 150" fill="none" stroke="white" stroke-width="3"/>
+</svg>
