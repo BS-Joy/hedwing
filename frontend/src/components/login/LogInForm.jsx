@@ -70,7 +70,7 @@ export default function LogInForm() {
       >
         {loginLoading ? (
           <>
-            <span className="loading loading-ring loading-xl"></span>
+            <span className="loading loading-dots loading-lg"></span>
           </>
         ) : (
           "Create Account"

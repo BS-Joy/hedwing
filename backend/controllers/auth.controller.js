@@ -153,3 +153,11 @@ export const updateProfile = catchAsync(async (req, res) => {
     user: updateUser,
   });
 });
+
+/*
+ * chek auth controller
+ */
+
+export const checkAuth = catchAsync((req, res) => {
+  res.status(200).json(req.user);
+});

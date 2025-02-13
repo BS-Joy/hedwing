@@ -1,8 +1,6 @@
 import { Link } from "react-router";
-import logo from "../../../assets/hedwing-logo-v3.svg";
-import AuthPagesLayout from "../../layout/AuthPagesLayout";
-import SignupForm from "../SignupForm";
-import AuthImagePattern from "../../AuthImagePattern";
+import SignupForm from "./SignupForm";
+import AuthPagesLayout from "../layout/AuthPagesLayout";
 
 export default function SignUpPage() {
   return (
