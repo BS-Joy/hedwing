@@ -6,7 +6,6 @@ import { useThemeStore } from "../../store/useThemeStore";
 
 export default function Layout() {
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
-  const { theme } = useThemeStore();
 
   useEffect(() => {
     checkAuth();
@@ -23,8 +22,6 @@ export default function Layout() {
   if (!authUser) {
     return <Navigate to="/login" replace />;
   }
-
-  console.log(theme);
 
   return (
     <>

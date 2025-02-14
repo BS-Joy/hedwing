@@ -1,15 +1,23 @@
-import React, { useEffect } from "react";
-import { Link } from "react-router";
-import { useAuthStore } from "../../store/useAuthStore";
+import ChatContainer from "./ChatContainer";
+import NoChatSelected from "./NoChatSelected";
+import { useChatStore } from "../../store/useChatStore";
+import Sidebar from "./Sidebar";
 
-export default function Home() {
+const HomePage = () => {
+  const { selectedUser } = useChatStore();
+
   return (
-    <div className="mt-16">
-      <h1 className="text-red-500 text-4xl">Hello world</h1>
-      <button className="btn btn-error">Error</button>
-      <Link className="link link-success" to="/signup">
-        To Signup page
-      </Link>
+    <div className="h-screen bg-base-200">
+      <div className="flex items-center justify-center pt-20 px-4">
+        <div className="bg-base-100 rounded-lg shadow-cl w-full max-w-6xl h-[calc(100vh-8rem)]">
+          <div className="flex h-full rounded-lg overflow-hidden">
+            <Sidebar />
+
+            {!selectedUser ? <NoChatSelected /> : <ChatContainer />}
+          </div>
+        </div>
+      </div>
     </div>
   );
-}
+};
+export default HomePage;

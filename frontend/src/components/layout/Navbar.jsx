@@ -2,6 +2,7 @@ import { Link } from "react-router";
 import { LogOut, MessageSquare, Settings, User } from "lucide-react";
 import { useAuthStore } from "../../store/useAuthStore";
 import logo from "../../assets/hedwing-logo-v3.svg";
+import { GiOwl } from "react-icons/gi";
 
 const Navbar = () => {
   const { logout, authUser } = useAuthStore();
@@ -18,10 +19,11 @@ const Navbar = () => {
               to="/"
               className="flex items-center gap-2.5 hover:opacity-90 transition-all"
             >
-              <div className="size-9 rounded-lg bg-primary/10 flex items-center justify-center">
-                <img src={logo} alt="hedwing logo" />
+              <div className="size-9 rounded-full bg-primary/10 flex items-center justify-center">
+                {/* <img src={logo} alt="hedwing logo" /> */}
+                <GiOwl size={25} />
               </div>
-              {/* <h1 className="text-lg font-bold">HedWing</h1> */}
+              <h1 className="text-2xl font-thin font-magicSchool2">HEDWING</h1>
             </Link>
           </div>
 

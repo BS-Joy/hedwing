@@ -65,7 +65,7 @@ export default function LogInForm() {
       {/* submit button */}
       <button
         type="submit"
-        className="btn btn-primary w-full"
+        className="btn btn-primary w-full font-fondamento"
         disabled={loginLoading}
       >
         {loginLoading ? (

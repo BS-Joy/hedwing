@@ -1,5 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Philosopher:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fondamento:ital@0;1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Alegreya+SC:ital,wght@0,400;0,500;0,700;0,800;0,900;1,400;1,500;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lumanosimo&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy:ital@0;1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+
 @import "tailwindcss";
+
 
 @plugin "daisyui" {
     themes: all;
+}
+
+@font-face {
+    font-family: magicSchool1;
+    font-style: normal;
+    font-display: swap;
+    src: url(assets/fonts/MagicSchoolOne.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: magicSchool2;
+    font-style: normal;
+    font-display: swap;
+    src: url(assets/fonts/MagicSchoolTwo.ttf) format('truetype');
+}
+
+@theme {
+    --font-fondamento: "Fondamento", serif;
+    --font-sortsMillGoudy: "Sorts Mill Goudy", serif;
+    --font-philosopher: "Philosopher", serif;
+    --font-lumanosimo: "Lumanosimo", serif;
+    --font-cinzel: "Cinzel", serif;
+    --font-alegreya: "Alegreya Sc", serif;
+    --font-amiri: "Amiri", serif;
+    --font-magicSchool1: 'magicSchool1';
+    --font-magicSchool2: 'magicSchool2';
+}
+
+@layer base {
+
+    h1,
+    h2 {
+        font-family: "Cinzel", serif;
+    }
+
+    button {
+        font-family: "Fondamento", serif;
+    }
 }
