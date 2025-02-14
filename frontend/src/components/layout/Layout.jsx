@@ -27,9 +27,9 @@ export default function Layout() {
   console.log(theme);
 
   return (
-    <div data-theme={theme}>
+    <>
       <Navbar />
       <Outlet />
-    </div>
+    </>
   );
 }

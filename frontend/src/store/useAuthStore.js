@@ -46,7 +46,7 @@ export const useAuthStore = create((set) => ({
       // get().connectSocket();
     } catch (error) {
       toast.error(
-        error.response.data.message || "Something went wrong during log in!"
+        error?.response?.data?.message || "Something went wrong during log in!"
       );
     } finally {
       set({ loginLoading: false });

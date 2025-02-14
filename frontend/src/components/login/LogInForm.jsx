@@ -73,7 +73,7 @@ export default function LogInForm() {
             <span className="loading loading-dots loading-lg"></span>
           </>
         ) : (
-          "Create Account"
+          "Log In"
         )}
       </button>
     </form>

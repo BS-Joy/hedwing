@@ -7,8 +7,10 @@ import ErrorPage from "./components/ErrorPage";
 import LogInPage from "./components/login/LogInPage";
 import ProfilePage from "./components/profile/ProfilePage";
 import SettingsPage from "./components/setting/SettingPage";
+import { useThemeStore } from "./store/useThemeStore";
 
 function App() {
+  const { theme } = useThemeStore();
   const routers = createBrowserRouter([
     {
       element: <Layout />,
@@ -47,7 +49,11 @@ function App() {
       element: <ErrorPage />,
     },
   ]);
-  return <RouterProvider router={routers} />;
+  return (
+    <div data-theme={theme}>
+      <RouterProvider router={routers} />
+    </div>
+  );
 }
 
 export default App;
