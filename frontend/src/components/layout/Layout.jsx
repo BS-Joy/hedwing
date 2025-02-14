@@ -5,7 +5,7 @@ import Navbar from "./Navbar";
 import { useThemeStore } from "../../store/useThemeStore";
 
 export default function Layout() {
-  const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
+  const { authUser, checkAuth, isCheckingAuth, onlineUsers } = useAuthStore();
 
   useEffect(() => {
     checkAuth();
@@ -18,7 +18,7 @@ export default function Layout() {
       </div>
     );
   }
-
+  console.log(onlineUsers);
   if (!authUser) {
     return <Navigate to="/login" replace />;
   }
