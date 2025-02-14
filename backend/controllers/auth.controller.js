@@ -137,7 +137,9 @@ export const updateProfile = catchAsync(async (req, res) => {
       .json({ success: false, message: "Profile Pic is required." });
   }
 
-  const cloudinaryRes = await cloudinary.uploader.upload(profilePic);
+  const cloudinaryRes = await cloudinary.uploader.upload(profilePic, {
+    folder: "hedwing/user",
+  });
 
   const updateUser = await userModel
     .findByIdAndUpdate(

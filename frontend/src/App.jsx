@@ -50,7 +50,7 @@ function App() {
     },
   ]);
   return (
-    <div data-theme={theme} className="font-lumanosimo">
+    <div data-theme={theme} className="font-philosopher">
       <RouterProvider router={routers} />
     </div>
   );

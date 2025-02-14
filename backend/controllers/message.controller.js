@@ -57,7 +57,9 @@ export const sendMessage = catchAsync(async (req, res) => {
   let imageUrl;
 
   if (image) {
-    const uploadRes = await cloudinary.uploader.upload(image);
+    const uploadRes = await cloudinary.uploader.upload(image, {
+      folder: "hedwing/messages",
+    });
     imageUrl = uploadRes.secure_url;
   }
 
