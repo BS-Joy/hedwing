@@ -10,6 +10,19 @@ export const useChatStore = create((set, get) => ({
 
   isUsersLoading: false,
   isMessagesLoading: false,
+  typingUsers: [],
+
+  listenForTypingEvents: () => {
+    const socket = useAuthStore.getState().socket;
+
+    if (!socket) return;
+
+    socket.on("userTyping", ({ senderId }) => {
+      set((state) => ({
+        typingUsers: [...new Set([...state.typingUsers, senderId])],
+      }));
+    });
+  },
 
   getUsers: async () => {
     try {
