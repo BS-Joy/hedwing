@@ -10,7 +10,11 @@ const Sidebar = () => {
     useChatStore();
 
   const { onlineUsers } = useAuthStore();
-  //   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
+  const [showOnlineOnly, setShowOnlineOnly] = useState(false);
+
+  const filteredUsers = showOnlineOnly
+    ? users?.filter((user) => onlineUsers?.includes(user?._id))
+    : users;
 
   useEffect(() => {
     getUsers();
@@ -27,9 +31,24 @@ const Sidebar = () => {
             Contacts
           </span>
         </div>
+        {/* TODO: Online filter toggle */}
+        <div className="mt-3 hidden lg:flex items-center gap-2">
+          <label className="cursor-pointer flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={showOnlineOnly}
+              onChange={(e) => setShowOnlineOnly(e.target.checked)}
+              className="checkbox checkbox-sm"
+            />
+            <span className="text-sm">Show online only</span>
+          </label>
+          <span className="text-xs text-zinc-500">
+            ({onlineUsers.length - 1} online)
+          </span>
+        </div>
       </div>
       <div className="overflow-y-auto w-full py-3">
-        {users?.map((user) => (
+        {filteredUsers?.map((user) => (
           <button
             key={user._id}
             onClick={() => setSelectedUser(user)}
@@ -59,7 +78,9 @@ const Sidebar = () => {
 
             {/* User info - only visible on larger screens */}
             <div className="hidden lg:block text-left min-w-0">
-              <div className="font-medium truncate">{user.fullName}</div>
+              <h4 className="font-medium truncate font-cinzel">
+                {user.fullName}
+              </h4>
               <div className="text-sm text-zinc-400">
                 {onlineUsers?.includes(user._id) ? "Online" : "Offline"}
               </div>

@@ -9,7 +9,7 @@ export default function Layout() {
 
   useEffect(() => {
     checkAuth();
-  }, []);
+  }, [checkAuth]);
 
   if (isCheckingAuth) {
     return (
@@ -18,7 +18,7 @@ export default function Layout() {
       </div>
     );
   }
-  console.log(onlineUsers);
+
   if (!authUser) {
     return <Navigate to="/login" replace />;
   }

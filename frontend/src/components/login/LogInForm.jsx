@@ -1,4 +1,4 @@
-import { User, Mail, Lock } from "lucide-react";
+import { Mail, Lock } from "lucide-react";
 import { useForm } from "react-hook-form";
 import InputFieldWrapper from "../form/InputFieldWrapper";
 import { useAuthStore } from "../../store/useAuthStore";
