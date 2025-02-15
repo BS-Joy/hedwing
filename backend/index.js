@@ -5,7 +5,7 @@ import { connectDB } from "./lib/db.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import messageRouter from "./routes/message.route.js";
-import { app, server } from "./lib/socket.io.js";
+import { app, io, server } from "./lib/socket.io.js";
 
 dotenv.config();
 const port = process.env.PORT || 5001;
@@ -18,7 +18,6 @@ app.use(
 );
 app.use(express.json());
 app.use(cookieParser());
-
 app.use("/api/auth", authRouter);
 app.use("/api/messages", messageRouter);
 
