@@ -14,13 +14,40 @@ export const useChatStore = create((set, get) => ({
 
   listenForTypingEvents: () => {
     const socket = useAuthStore.getState().socket;
+    const { typingUsers } = get();
 
     if (!socket) return;
 
     socket.on("userTyping", ({ senderId }) => {
-      set((state) => ({
-        typingUsers: [...new Set([...state.typingUsers, senderId])],
-      }));
+      console.log("On user start typing: ", senderId);
+      const x = [...new Set([...typingUsers, senderId])];
+
+      console.log(x);
+      set({ typingUsers: x });
+    });
+
+    socket.on("userStopTyping", ({ senderId }) => {
+      console.log("on user stop typing: ", senderId);
+
+      const x = typingUsers.filter((id) => id !== senderId);
+
+      console.log(x);
+      set({ typingUsers: x });
+    });
+  },
+
+  sendTypingStatus: (receiverId, isTyping) => {
+    const { socket, authUser } = useAuthStore.getState();
+
+    const { typingUsers } = get();
+
+    console.log({ receiverId, isTyping });
+
+    if (!socket || !authUser?._id) return;
+
+    socket.emit(isTyping ? "typing" : "stopTyping", {
+      senderId: authUser._id,
+      receiverId,
     });
   },
 

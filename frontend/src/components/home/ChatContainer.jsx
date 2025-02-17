@@ -74,7 +74,7 @@ export default function ChatContainer() {
                 {formatMessageTime(msg?.createdAt)}
               </time>
             </div>
-            <div className="chat-bubble flex flex-col">
+            <div className="chat-bubble flex flex-col bg-[#E4D8B4]">
               {msg?.image && (
                 <img
                   src={msg?.image}
@@ -82,7 +82,9 @@ export default function ChatContainer() {
                   className="sm:max-w-[150px] rounded-md mb-2"
                 />
               )}
-              {msg.text && <p className="font-fondamento">{msg.text}</p>}
+              {msg.text && (
+                <p className="font-lumanosimo text-[#555144]">{msg.text}</p>
+              )}
             </div>
           </div>
         ))}

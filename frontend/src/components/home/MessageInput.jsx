@@ -1,13 +1,16 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Image, Send, X } from "lucide-react";
 import toast from "react-hot-toast";
 import { useChatStore } from "../../store/useChatStore";
+import TypingIndicator from "./TypingIndicator";
 
 const MessageInput = () => {
   const [text, setText] = useState("");
   const [imagePreview, setImagePreview] = useState(null);
   const fileInputRef = useRef(null);
-  const { sendMessage } = useChatStore();
+  const { sendMessage, sendTypingStatus, selectedUser, listenForTypingEvents } =
+    useChatStore();
+  const [isTyping, setIsTyping] = useState(false);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -26,6 +29,27 @@ const MessageInput = () => {
   const removeImage = () => {
     setImagePreview(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  let typingTimeout;
+  let receiver;
+
+  const handleMsgText = (e) => {
+    setText(e.target.value);
+
+    if (!isTyping) {
+      sendTypingStatus(selectedUser?._id, true);
+      setIsTyping(true);
+    }
+
+    // Clear previous timeout (prevents multiple timeouts from stacking up)
+    clearTimeout(typingTimeout);
+
+    // Set new timeout to stop typing after 2 seconds
+    typingTimeout = setTimeout(() => {
+      sendTypingStatus(selectedUser?._id, false);
+      setIsTyping(false);
+    }, 2000);
   };
 
   const handleSendMessage = async (e) => {
@@ -47,8 +71,15 @@ const MessageInput = () => {
     }
   };
 
+  useEffect(() => {
+    listenForTypingEvents();
+
+    return () => clearTimeout(typingTimeout);
+  }, []);
+
   return (
     <div className="p-4 w-full">
+      <TypingIndicator receiver={selectedUser} />
       {imagePreview && (
         <div className="mb-3 flex items-center gap-2">
           <div className="relative">
@@ -76,7 +107,7 @@ const MessageInput = () => {
             className="w-full input input-bordered rounded-lg input-sm sm:input-md font-lumanosimo focus:outline-0"
             placeholder="Type a message..."
             value={text}
-            onChange={(e) => setText(e.target.value)}
+            onChange={handleMsgText}
           />
           <input
             type="file"
