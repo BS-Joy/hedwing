@@ -51,10 +51,14 @@ export default function MessageContainer({ msg }) {
           )}
         </>
       )}
+
+      {/* 3dot dropdown */}
       <div
         className={`dropdown dropdown-top ${
-          msg.senderId === authUser._id ? "-left-6 dropdown-end" : "-right-6"
-        }  hover:cursor-pointer hidden group-hover:block absolute`}
+          msg.senderId === authUser._id
+            ? "-left-6 dropdown-end group-hover:block"
+            : "-right-6"
+        }  hover:cursor-pointer hidden  absolute`}
       >
         <div tabIndex={0} role="button" className="">
           <EllipsisVertical />

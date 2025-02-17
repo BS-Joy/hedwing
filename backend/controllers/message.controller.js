@@ -91,6 +91,16 @@ export const sendMessage = catchAsync(async (req, res) => {
 export const deleteMessage = catchAsync(async (req, res) => {
   const { msgId } = req.params;
 
+  const senderId = req.user._id;
+
+  const theMessage = await messageModel.findById(msgId);
+
+  if (theMessage?.senderId !== senderId) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized: You are not the owner of this message!",
+    });
+  }
   if (!msgId) {
     return res.status(400).json({
       success: false,
@@ -111,5 +121,28 @@ export const deleteMessage = catchAsync(async (req, res) => {
     success: true,
     message: "Message deleted successfully",
     response: message, // Sending back the deleted message
+  });
+});
+
+/**
+ * edit a message
+ */
+export const editMessage = catchAsync(async (req, res) => {
+  const updatedMessage = req.body;
+
+  const editRes = await messageModel.findByIdAndUpdate(
+    updatedMessage._id,
+    {
+      text: updatedMessage.text,
+    },
+    { new: true }
+  );
+
+  console.log(editRes);
+
+  res.status(200).json({
+    success: true,
+    message: "Message updated successfully.",
+    updatedMessage: editRes,
   });
 });
