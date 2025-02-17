@@ -21,27 +21,17 @@ export const useChatStore = create((set, get) => ({
     socket.on("userTyping", ({ senderId }) => {
       console.log("On user start typing: ", senderId);
       const x = [...new Set([...typingUsers, senderId])];
-
-      console.log(x);
       set({ typingUsers: x });
     });
 
     socket.on("userStopTyping", ({ senderId }) => {
-      console.log("on user stop typing: ", senderId);
-
       const x = typingUsers.filter((id) => id !== senderId);
-
-      console.log(x);
       set({ typingUsers: x });
     });
   },
 
   sendTypingStatus: (receiverId, isTyping) => {
     const { socket, authUser } = useAuthStore.getState();
-
-    const { typingUsers } = get();
-
-    console.log({ receiverId, isTyping });
 
     if (!socket || !authUser?._id) return;
 

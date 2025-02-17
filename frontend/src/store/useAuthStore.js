@@ -99,10 +99,12 @@ export const useAuthStore = create((set, get) => ({
       toast.success("Profile updated successfully");
     } catch (error) {
       console.log("error in update profile:", error);
-      toast.error(
+
+      const errMsg =
         error.response.data.message ||
-          "Something went wrong during profile update!"
-      );
+        (error.status === 413 && "Image is too large!") ||
+        "Something went wrong during profile update!";
+      toast.error(errMsg);
     } finally {
       set({ isUpdatingProfile: false });
     }

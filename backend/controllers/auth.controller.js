@@ -139,6 +139,7 @@ export const updateProfile = catchAsync(async (req, res) => {
 
   const cloudinaryRes = await cloudinary.uploader.upload(profilePic, {
     folder: "hedwing/user",
+    limits: { file_size: 10485760 }, // max limit 10 mb
   });
 
   const updateUser = await userModel
