@@ -84,3 +84,32 @@ export const sendMessage = catchAsync(async (req, res) => {
     data: newMessage,
   });
 });
+
+/**
+ * delete a message
+ */
+export const deleteMessage = catchAsync(async (req, res) => {
+  const { msgId } = req.body;
+
+  if (!msgId) {
+    return res.status(400).json({
+      success: false,
+      message: "Message ID is required.",
+    });
+  }
+
+  const message = await messageModel.findByIdAndDelete(msgId);
+
+  if (!message) {
+    return res.status(404).json({
+      success: false,
+      message: "Invalid message ID or message not found!",
+    });
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "Message deleted successfully",
+    response: message, // Sending back the deleted message
+  });
+});

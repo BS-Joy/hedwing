@@ -1,5 +1,6 @@
 import { Link } from "react-router";
-import { LogOut, MessageSquare, Settings, User } from "lucide-react";
+import { LogOut, Palette, Settings, User } from "lucide-react";
+import { IoColorPaletteOutline } from "react-icons/io5";
 import { useAuthStore } from "../../store/useAuthStore";
 import logo from "../../assets/hedwing-logo-v3.svg";
 import { GiOwl } from "react-icons/gi";
@@ -35,8 +36,8 @@ const Navbar = () => {
               
               `}
             >
-              <Settings className="w-4 h-4" />
-              <span className="hidden sm:inline">Settings</span>
+              <Palette className="w-4 h-4" />
+              <span className="hidden sm:inline">Themes</span>
             </Link>
 
             {authUser && (
