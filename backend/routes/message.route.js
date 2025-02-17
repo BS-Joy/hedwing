@@ -15,6 +15,6 @@ messageRouter.get("/:id", protectRoute, getMessages);
 
 messageRouter.post("/send/:id", protectRoute, sendMessage);
 
-messageRouter.delete("/delete", protectRoute, deleteMessage);
+messageRouter.delete("/delete/:msgId", protectRoute, deleteMessage);
 
 export default messageRouter;

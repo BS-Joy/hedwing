@@ -89,7 +89,7 @@ export const sendMessage = catchAsync(async (req, res) => {
  * delete a message
  */
 export const deleteMessage = catchAsync(async (req, res) => {
-  const { msgId } = req.body;
+  const { msgId } = req.params;
 
   if (!msgId) {
     return res.status(400).json({

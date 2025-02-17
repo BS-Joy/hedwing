@@ -41,6 +41,10 @@ export const useChatStore = create((set, get) => ({
     });
   },
 
+  setMessages: (newMessages) => {
+    set({ messages: newMessages });
+  },
+
   getUsers: async () => {
     try {
       set({ isUsersLoading: true });
