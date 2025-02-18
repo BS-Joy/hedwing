@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useChatStore } from "../../store/useChatStore";
 import ChatHeader from "./ChatHeader";
 import MessageInput from "./MessageInput";
@@ -17,6 +17,9 @@ export default function ChatContainer() {
     subscribeToMessages,
     unsubscribeFromMessages,
   } = useChatStore();
+
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const { authUser } = useAuthStore();
 
@@ -37,7 +40,7 @@ export default function ChatContainer() {
 
   if (isMessagesLoading) {
     return (
-      <div className="flex-1 flex flex-col overflow-auto">
+      <div className="flex-1 flex flex-col overflow-auto h-full">
         <ChatHeader />
         <MessageSkeleton />
         <MessageInput />
@@ -46,7 +49,7 @@ export default function ChatContainer() {
   }
 
   return (
-    <div className="flex-1 flex flex-col overflow-auto">
+    <div className="flex-1 flex flex-col overflow-auto h-full">
       <ChatHeader />
       {/* messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
@@ -80,11 +83,16 @@ export default function ChatContainer() {
             </div>
 
             {/* message */}
-            <MessageContainer msg={msg} />
+            <MessageContainer
+              msg={msg}
+              setMessage={setMessage}
+              loading={loading}
+              setLoading={setLoading}
+            />
           </div>
         ))}
       </div>
-      <MessageInput />
+      <MessageInput msg={message} setMsg={setMessage} />
     </div>
   );
 }

@@ -1,6 +1,5 @@
 import { Link } from "react-router";
 import { LogOut, Palette, Settings, User } from "lucide-react";
-import { IoColorPaletteOutline } from "react-icons/io5";
 import { useAuthStore } from "../../store/useAuthStore";
 import logo from "../../assets/hedwing-logo-v3.svg";
 import { GiOwl } from "react-icons/gi";
@@ -13,8 +12,8 @@ const Navbar = () => {
       className="bg-base-100 border-b border-base-300 fixed w-full top-0 z-40 
     backdrop-blur-lg"
     >
-      <div className="container mx-auto px-4 h-16">
-        <div className="flex items-center justify-between h-full">
+      <div className="container mx-auto px-4 py-4 sm:h-16">
+        <div className="flex  items-center justify-between h-full">
           <div className="flex items-center gap-8">
             <Link
               to="/"
@@ -24,7 +23,9 @@ const Navbar = () => {
                 {/* <img src={logo} alt="hedwing logo" /> */}
                 <GiOwl size={25} />
               </div>
-              <h1 className="text-2xl font-thin font-magicSchool2">HEDWING</h1>
+              <h1 className="text-xl sm:text-2xl font-thin font-magicSchool2">
+                HEDWING
+              </h1>
             </Link>
           </div>
 

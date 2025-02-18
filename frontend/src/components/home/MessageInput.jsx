@@ -4,13 +4,34 @@ import toast from "react-hot-toast";
 import { useChatStore } from "../../store/useChatStore";
 import TypingIndicator from "./TypingIndicator";
 
-const MessageInput = () => {
-  const [text, setText] = useState("");
+const MessageInput = ({ msg, setMsg, loading, setLoading }) => {
+  const [text, setText] = useState(msg?.text ?? "");
   const [imagePreview, setImagePreview] = useState(null);
   const fileInputRef = useRef(null);
-  const { sendMessage, sendTypingStatus, selectedUser, listenForTypingEvents } =
-    useChatStore();
+  const {
+    sendMessage,
+    editMessage,
+    sendTypingStatus,
+    selectedUser,
+    listenForTypingEvents,
+  } = useChatStore();
   const [isTyping, setIsTyping] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+
+  const textInputRef = useRef(null);
+
+  // ✅ Update state when `msg` prop changes
+  useEffect(() => {
+    setText(msg?.text ?? "");
+
+    if (msg?.text) {
+      setIsEditing(true);
+    }
+
+    if (msg?.text) {
+      textInputRef.current.focus();
+    }
+  }, [msg?.text]);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -32,7 +53,6 @@ const MessageInput = () => {
   };
 
   let typingTimeout;
-  let receiver;
 
   const handleMsgText = (e) => {
     setText(e.target.value);
@@ -52,18 +72,26 @@ const MessageInput = () => {
     }, 2000);
   };
 
-  const handleSendMessage = async (e) => {
+  const handleSubmitMessage = async (e) => {
     e.preventDefault();
     if (!text.trim() && !imagePreview) return;
 
     try {
-      await sendMessage({
-        text: text.trim(),
-        image: imagePreview,
-      });
+      if (isEditing) {
+        await editMessage({
+          ...msg,
+          text: text,
+        });
+      } else {
+        await sendMessage({
+          text: text.trim(),
+          image: imagePreview,
+        });
+      }
 
       // Clear form
       setText("");
+      setMsg("");
       setImagePreview(null);
       if (fileInputRef.current) fileInputRef.current.value = "";
     } catch (error) {
@@ -100,9 +128,10 @@ const MessageInput = () => {
         </div>
       )}
 
-      <form onSubmit={handleSendMessage} className="flex items-center gap-2">
+      <form onSubmit={handleSubmitMessage} className="flex items-center gap-2">
         <div className="flex-1 flex gap-2">
           <input
+            ref={textInputRef}
             type="text"
             className="w-full input input-bordered rounded-lg input-sm sm:input-md font-lumanosimo focus:outline-0"
             placeholder="Type a message..."

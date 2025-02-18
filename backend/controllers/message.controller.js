@@ -95,12 +95,13 @@ export const deleteMessage = catchAsync(async (req, res) => {
 
   const theMessage = await messageModel.findById(msgId);
 
-  if (theMessage?.senderId !== senderId) {
+  if (theMessage?.senderId.toString() !== senderId.toString()) {
     return res.status(401).json({
       success: false,
       message: "Unauthorized: You are not the owner of this message!",
     });
   }
+
   if (!msgId) {
     return res.status(400).json({
       success: false,
@@ -130,15 +131,43 @@ export const deleteMessage = catchAsync(async (req, res) => {
 export const editMessage = catchAsync(async (req, res) => {
   const updatedMessage = req.body;
 
+  if (!updatedMessage?._id || !updatedMessage?.text) {
+    return res.status(400).json({
+      success: false,
+      message: "Message ID and updated text are required!",
+    });
+  }
+
+  const senderId = req.user._id;
+
+  if (!updatedMessage?.senderId) {
+    return res.status(400).json({
+      success: false,
+      message: "Sender ID is required!",
+    });
+  }
+
+  if (updatedMessage.senderId !== senderId.toString()) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized: You are not the owner of this message!",
+    });
+  }
+
+  const message = await messageModel.findById(updatedMessage._id);
+
+  if (!message) {
+    return res.status(404).json({
+      success: false,
+      message: "Message not found!",
+    });
+  }
+
   const editRes = await messageModel.findByIdAndUpdate(
     updatedMessage._id,
-    {
-      text: updatedMessage.text,
-    },
+    { text: updatedMessage.text, edited: true },
     { new: true }
   );
-
-  console.log(editRes);
 
   res.status(200).json({
     success: true,

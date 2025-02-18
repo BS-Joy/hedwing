@@ -84,6 +84,26 @@ export const useChatStore = create((set, get) => ({
     }
   },
 
+  editMessage: async (msgData) => {
+    try {
+      const { selectedUser, messages } = get();
+      const res = await axiosInstance.patch(`/messages/edit`, msgData);
+      const updatedMessage = res?.data?.updatedMessage;
+      const updatedMessages = messages.map((msg) => {
+        if (msg._id === updatedMessage?._id) {
+          msg.text = updatedMessage.text;
+          msg.edited = updatedMessage?.edited;
+        }
+
+        return msg;
+      });
+
+      set({ messages: updatedMessages });
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  },
+
   subscribeToMessages: () => {
     const { selectedUser } = get();
     if (!selectedUser) return;

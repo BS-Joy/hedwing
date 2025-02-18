@@ -4,11 +4,16 @@ import { axiosInstance } from "../../lib/axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useChatStore } from "../../store/useChatStore";
+import { Check } from "lucide-react";
 
-export default function MessageContainer({ msg }) {
+export default function MessageContainer({
+  msg,
+  setMessage,
+  loading,
+  setLoading,
+}) {
   const { authUser } = useAuthStore();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+
   const { messages, setMessages } = useChatStore();
 
   const handleDeleteMessage = async () => {
@@ -34,10 +39,11 @@ export default function MessageContainer({ msg }) {
     }
   };
   return (
-    <div className="chat-bubble relative flex flex-col bg-[#E4D8B4]">
+    <div className="chat-bubble max-w-[80%] sm:max-w-[50%] relative flex flex-col bg-[#E4D8B4]">
       {loading ? (
         <span className="loading loading-dots text-[#555144] loading-xs"></span>
       ) : (
+        // messages
         <>
           {msg?.image && (
             <img
@@ -70,7 +76,13 @@ export default function MessageContainer({ msg }) {
           }  menu bg-base-100 rounded-box z-1 w-36 p-2 shadow-sm border`}
         >
           <li>
-            <button className="flex hover:text-blue-400">
+            <button
+              onClick={() => {
+                console.log(msg.text);
+                setMessage(msg);
+              }}
+              className="flex hover:text-blue-400"
+            >
               <Pencil size={12} /> Edit
             </button>
           </li>
@@ -83,6 +95,15 @@ export default function MessageContainer({ msg }) {
             </button>
           </li>
         </ul>
+      </div>
+      {/* chat footer */}
+      <div
+        className={`chat-footer absolute -bottom-5 left-0 justify-between pr-1 mb-1 w-full ${
+          msg.senderId === authUser._id ? "" : ""
+        }`}
+      >
+        {msg?.edited && <p className="font-lumanosimo text-[8px]">(edited)</p>}
+        <p>{msg?.senderId === authUser?._id && <Check size={12} />}</p>
       </div>
     </div>
   );
