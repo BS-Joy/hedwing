@@ -160,7 +160,15 @@ export const updateProfile = catchAsync(async (req, res) => {
 /*
  * chek auth controller
  */
-
 export const checkAuth = catchAsync((req, res) => {
   res.status(200).json(req.user);
+});
+
+/*
+ * search user
+ */
+export const searchUser = catchAsync(async (req, res) => {
+  const { searchTerm } = req.body;
+
+  console.log(searchTerm);
 });
