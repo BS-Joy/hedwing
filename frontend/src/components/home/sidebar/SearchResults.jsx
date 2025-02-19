@@ -1,3 +1,6 @@
+import { ModalWrapper } from "../../ModalWrapper";
+import UserModalCard from "./UserModalCard";
+
 const SearchResults = ({ results, isLoading, searchTerm }) => {
   if (results.length === 0 && !isLoading && searchTerm) {
     return (
@@ -27,7 +30,10 @@ const SearchResults = ({ results, isLoading, searchTerm }) => {
               key={user._id}
               className="px-4 py-2 hover:bg-base-200 cursor-pointer"
             >
-              {user.fullName}
+              <ModalWrapper user={user}>
+                <UserModalCard user={user} />
+              </ModalWrapper>
+              {/* {user.fullName} */}
             </li>
           ))}
         </ul>

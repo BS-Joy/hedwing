@@ -1,11 +1,11 @@
-export const ModalWrapper = ({ children }) => {
+export const ModalWrapper = ({ children, user }) => {
   return (
     <>
       <button
-        className="btn"
+        className="px-4 py-2 hover:bg-base-200 cursor-pointer"
         onClick={() => document.getElementById("my_modal_2").showModal()}
       >
-        open modal
+        {user?.fullName}
       </button>
       <dialog id="my_modal_2" className="modal">
         <div className="modal-box p-0">
