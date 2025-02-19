@@ -15,6 +15,7 @@ export const useAuthStore = create((set, get) => ({
   onlineUsers: [],
   socket: null,
 
+  // socket related
   connectSocket: () => {
     const { authUser } = get();
 
@@ -37,6 +38,7 @@ export const useAuthStore = create((set, get) => ({
     if (get().socket?.connected) get().socket?.disconnect();
   },
 
+  // auth related
   checkAuth: async () => {
     try {
       set({ isCheckingAuth: true });
@@ -109,16 +111,18 @@ export const useAuthStore = create((set, get) => ({
       set({ isUpdatingProfile: false });
     }
   },
-  searchUser: async (searchTerm) => {
-    try {
-      console.log(searchTerm);
-    } catch (error) {
-      console.log("error in update profile:", error);
 
-      const errMsg =
-        error.response.data.message ||
-        "Something went wrong during profile update!";
-      toast.error(errMsg);
-    }
-  },
+  // search user related
+  // sea: async (searchTerm) => {
+  //   try {
+  //     console.log(searchTerm);
+  //   } catch (error) {
+  //     console.log("error in update profile:", error);
+
+  //     const errMsg =
+  //       error.response.data.message ||
+  //       "Something went wrong during profile update!";
+  //     toast.error(errMsg);
+  //   }
+  // },
 }));

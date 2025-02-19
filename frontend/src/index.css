@@ -9,10 +9,15 @@
 
 @import "tailwindcss";
 
+@plugin 'tailwind-scrollbar' {
+    nocompatible: true;
+    /* preferredStrategy: 'pseudoelements'; */
+}
 
 @plugin "daisyui" {
     themes: all;
 }
+
 
 @font-face {
     font-family: magicSchool1;
@@ -51,3 +56,6 @@
         font-family: "Fondamento", serif;
     }
 }
+
+
+@layer components {}

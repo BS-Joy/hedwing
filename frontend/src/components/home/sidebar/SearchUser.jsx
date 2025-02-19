@@ -1,6 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import { UserSearch } from "lucide-react";
 import SearchResults from "./SearchResults";
+import useDebounce from "../../../hooks/useDebounce";
+import { useAuthStore } from "../../../store/useAuthStore";
+import { axiosInstance } from "../../../lib/axios";
+import { ModalWrapper } from "../../ModalWrapper";
 // import SearchResults from "./SearchResults"
 
 export default function SearchUser({ showSearch }) {
@@ -8,6 +12,7 @@ export default function SearchUser({ showSearch }) {
   const [results, setResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const searchbarRef = useRef(null);
+  // const {searchUser} = useAuthStore()
 
   useEffect(() => {
     if (showSearch) {
@@ -19,40 +24,59 @@ export default function SearchUser({ showSearch }) {
     return () => searchbarRef.current?.blur();
   }, [showSearch]);
 
-  useEffect(() => {
-    const fetchResults = async () => {
-      if (searchTerm.trim() === "") {
-        setResults([]);
-        return;
-      }
+  const searchUser = useDebounce(async (searchQuery) => {
+    try {
+      const res = await axiosInstance.get(
+        `/auth/search?searchTerm=${searchQuery}`
+      );
 
-      setIsLoading(true);
-      // Simulating an API call with setTimeout
-      setTimeout(() => {
-        const mockResults = [
-          { id: 1, title: "User 1" },
-          { id: 2, title: "User 2" },
-          { id: 3, title: "User 3" },
-        ];
-        setResults(mockResults);
+      if (res?.data?.success) {
         setIsLoading(false);
-      }, 500);
-    };
+        setResults(res?.data?.users);
+      }
+    } catch (err) {
+      console.log(err.response?.data?.message);
+    }
+  }, 700);
 
-    fetchResults();
-  }, [searchTerm]);
+  // useEffect(() => {
+  //   const fetchResults = async () => {
+  //     if (searchTerm.trim() === "") {
+  //       setResults([]);
+  //       return;
+  //     }
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    // You can add additional search logic here if needed
+  //     setIsLoading(true);
+  //     // Simulating an API call with setTimeout
+  //     setTimeout(() => {
+  //       const mockResults = [
+  //         { id: 1, title: "User 1" },
+  //         { id: 2, title: "User 2" },
+  //         { id: 3, title: "User 3" },
+  //       ];
+  //       setResults(mockResults);
+  //       setIsLoading(false);
+  //     }, 500);
+  //   };
+
+  //   fetchResults();
+  // }, [searchTerm]);
+
+  const handleSearchTerm = (e) => {
+    const query = e.target.value;
+    setIsLoading(true);
+    setSearchTerm(query);
+    if (query?.length > 0) {
+      searchUser(query);
+    } else {
+      setIsLoading(false);
+      setResults([]);
+    }
   };
 
   return (
     <div className="w-full max-w-md mx-auto relative">
-      <form
-        onSubmit={handleSearch}
-        className="join w-full rounded flex justify-center my-4"
-      >
+      <div className="join w-full rounded flex justify-center my-4">
         <label className="input rounded focus:border-none outline-0 focus:outline-0 focus-within:outline-0">
           <UserSearch />
           <input
@@ -62,14 +86,18 @@ export default function SearchUser({ showSearch }) {
             placeholder="search user to connect"
             required
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={handleSearchTerm}
           />
         </label>
         {/* <button type="submit" className="btn btn-neutral join-item">
           <UserSearch size={18} />
         </button> */}
-      </form>
-      <SearchResults results={results} isLoading={isLoading} />
+      </div>
+      <SearchResults
+        results={results}
+        isLoading={isLoading}
+        searchTerm={searchTerm}
+      />
     </div>
   );
 }

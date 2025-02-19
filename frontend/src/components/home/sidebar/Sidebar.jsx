@@ -6,6 +6,8 @@ import SidebarSkeleton from "../skeletons/SidebarSkeleton";
 import defaultAvatar from "../../../assets/avatar.png";
 import SearchUser from "./SearchUser";
 import { UserX, UserSearch } from "lucide-react";
+import { ModalWrapper } from "../../ModalWrapper";
+import UserModalCard from "./UserModalCard";
 
 const Sidebar = () => {
   const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } =
@@ -30,6 +32,9 @@ const Sidebar = () => {
     <aside className="sm:h-full sm:w-64 md:w-72 border-r border-base-300 flex flex-col transition-all duration-200">
       <div className="border-b border-base-300 w-full p-5">
         {/* sidebar title */}
+        <ModalWrapper>
+          <UserModalCard />
+        </ModalWrapper>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Users className="size-6" />
