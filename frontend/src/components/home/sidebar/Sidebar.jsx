@@ -5,7 +5,7 @@ import { useAuthStore } from "../../../store/useAuthStore";
 import SidebarSkeleton from "../skeletons/SidebarSkeleton";
 import defaultAvatar from "../../../assets/avatar.png";
 import SearchUser from "./SearchUser";
-import { SearchX, Search } from "lucide-react";
+import { UserX, UserSearch } from "lucide-react";
 
 const Sidebar = () => {
   const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } =
@@ -37,14 +37,15 @@ const Sidebar = () => {
           </div>
           <button
             onClick={() => setShowSearch(!showSearch)}
-            className="hover:cursor-pointer"
+            className="hover:cursor-pointer tooltip"
+            data-tip={`${showSearch ? "Close search" : "Search user"}`}
           >
-            {showSearch ? <SearchX /> : <Search />}
+            {showSearch ? <UserX /> : <UserSearch />}
           </button>
         </div>
 
         {/* search user */}
-        {showSearch && <SearchUser />}
+        {showSearch && <SearchUser showSearch={showSearch} />}
 
         {/* Online filter toggle */}
         <div className="mt-3 flex items-center gap-2">

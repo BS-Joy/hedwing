@@ -6,6 +6,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import messageRouter from "./routes/message.route.js";
 import { app, io, server } from "./lib/socket.io.js";
+import friendsRouter from "./routes/friend.route.js";
 
 dotenv.config();
 const port = process.env.PORT || 5001;
@@ -18,8 +19,10 @@ app.use(
 );
 app.use(express.json({ limit: "10mb" }));
 app.use(cookieParser());
+
 app.use("/api/auth", authRouter);
 app.use("/api/messages", messageRouter);
+app.use("/api/friends", friendsRouter);
 
 // app.use((err, req, res, next) => {
 //   console.error("Error:", err.message);
@@ -30,6 +33,6 @@ app.use("/api/messages", messageRouter);
 // });
 
 server.listen(port, () => {
-  console.log("🚀server is running on port: ", port);
+  console.log("🚀 server is running on port: ", port);
   connectDB();
 });

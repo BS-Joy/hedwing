@@ -168,7 +168,9 @@ export const checkAuth = catchAsync((req, res) => {
  * search user
  */
 export const searchUser = catchAsync(async (req, res) => {
-  const { searchTerm } = req.body;
+  const { searchTerm } = req.query;
 
   console.log(searchTerm);
+
+  res.json(searchTerm);
 });

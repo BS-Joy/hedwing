@@ -3,6 +3,7 @@ import {
   checkAuth,
   loginController,
   logoutController,
+  searchUser,
   signupController,
   updateProfile,
 } from "../controllers/auth.controller.js";
@@ -17,5 +18,7 @@ authRouter.get("/logout", logoutController);
 authRouter.patch("/updateProfile", protectRoute, updateProfile);
 
 authRouter.get("/checkauth", protectRoute, checkAuth);
+
+authRouter.get("/search", searchUser);
 
 export default authRouter;

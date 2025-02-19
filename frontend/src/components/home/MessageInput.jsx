@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { useChatStore } from "../../store/useChatStore";
 import TypingIndicator from "./TypingIndicator";
 
-const MessageInput = ({ msg, setMsg, loading, setLoading }) => {
+const MessageInput = ({ msg, setMsg }) => {
   const [text, setText] = useState(msg?.text ?? "");
   const [imagePreview, setImagePreview] = useState(null);
   const fileInputRef = useRef(null);
@@ -55,7 +55,12 @@ const MessageInput = ({ msg, setMsg, loading, setLoading }) => {
   let typingTimeout;
 
   const handleMsgText = (e) => {
-    setText(e.target.value);
+    const inputText = e.target.value;
+    if (isEditing && inputText === "") {
+      setIsEditing(false);
+      setMsg("");
+    }
+    setText(inputText);
 
     if (!isTyping) {
       sendTypingStatus(selectedUser?._id, true);
