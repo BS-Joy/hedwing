@@ -23,7 +23,10 @@ const userSchema = new mongoose.Schema(
     friends: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Friend",
-      default: {},
+    },
+    blockList: {
+      type: Array,
+      ref: "User",
     },
   },
   {

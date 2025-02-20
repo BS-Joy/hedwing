@@ -1,7 +1,6 @@
 import { UserPlus, ShieldX } from "lucide-react";
 
 export default function UserModalCard({ user }) {
-  console.log(user?.fullName);
   return (
     <div className="flex  flex-col items-center justify-center space-y-4 rounded-xl bg-base p-8 shadow-lg dark:bg-[#18181B]">
       <div className="group relative">

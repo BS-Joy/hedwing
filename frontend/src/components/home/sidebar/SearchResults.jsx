@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { ModalWrapper } from "../../ModalWrapper";
 import UserModalCard from "./UserModalCard";
 
 const SearchResults = ({ results, isLoading, searchTerm }) => {
+  const [modalUser, setModalUser] = useState(null);
   if (results.length === 0 && !isLoading && searchTerm) {
     return (
       <div className="w-full bg-base-100 border border-primary rounded-md shadow-lg absolute z-10">
@@ -29,15 +31,24 @@ const SearchResults = ({ results, isLoading, searchTerm }) => {
             <li
               key={user._id}
               className="px-4 py-2 hover:bg-base-200 cursor-pointer"
+              onClick={() => setModalUser(user)}
             >
-              <ModalWrapper user={user}>
-                <UserModalCard user={user} />
-              </ModalWrapper>
+              <button
+                className="px-4 py-2 hover:bg-base-200 cursor-pointer"
+                onClick={() =>
+                  document.getElementById("my_modal_2").showModal()
+                }
+              >
+                {user?.fullName}
+              </button>
               {/* {user.fullName} */}
             </li>
           ))}
         </ul>
       )}
+      <ModalWrapper>
+        {modalUser && <UserModalCard user={modalUser} />}
+      </ModalWrapper>
     </div>
   );
 };
