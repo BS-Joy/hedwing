@@ -11,14 +11,20 @@ const Sidebar = () => {
   const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } =
     useChatStore();
 
-  const { onlineUsers } = useAuthStore();
+  const { onlineUsers, authUser } = useAuthStore();
 
   const [showSearch, setShowSearch] = useState(false);
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
 
+  const refinedUsers = users.map((chat) => {
+    const siUsers = chat?.users?.find((user) => user?._id !== authUser?._id);
+
+    return siUsers;
+  });
+
   const filteredUsers = showOnlineOnly
-    ? users?.filter((user) => onlineUsers?.includes(user?._id))
-    : users;
+    ? refinedUsers?.filter((user) => onlineUsers?.includes(user?._id))
+    : refinedUsers;
 
   useEffect(() => {
     getUsers();

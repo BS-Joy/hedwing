@@ -97,6 +97,9 @@ export default function SearchUser({ showSearch }) {
         results={results}
         isLoading={isLoading}
         searchTerm={searchTerm}
+        setResults={setResults}
+        setIsLoading={setIsLoading}
+        setSearchTerm={setSearchTerm}
       />
     </div>
   );

@@ -170,6 +170,8 @@ export const checkAuth = catchAsync((req, res) => {
 export const searchUser = catchAsync(async (req, res) => {
   const { searchTerm } = req.query;
 
+  const currentUser = req.user;
+
   if (!searchTerm) {
     return res.status(400).json({
       success: false,
@@ -177,6 +179,7 @@ export const searchUser = catchAsync(async (req, res) => {
     });
   }
   const users = await userModel.find({
+    _id: { $ne: currentUser._id },
     $or: [
       { fullName: { $regex: searchTerm, $options: "i" } }, // Case-insensitive search for fullName
       { email: { $regex: searchTerm, $options: "i" } }, // Case-insensitive search for email

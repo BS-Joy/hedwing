@@ -19,6 +19,6 @@ authRouter.patch("/updateProfile", protectRoute, updateProfile);
 
 authRouter.get("/checkauth", protectRoute, checkAuth);
 
-authRouter.get("/search", searchUser);
+authRouter.get("/search", protectRoute, searchUser);
 
 export default authRouter;

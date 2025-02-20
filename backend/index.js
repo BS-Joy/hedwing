@@ -6,7 +6,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import messageRouter from "./routes/message.route.js";
 import { app, io, server } from "./lib/socket.io.js";
-import friendsRouter from "./routes/friend.route.js";
+import chatRouter from "./routes/chat.route.js";
 
 dotenv.config();
 const port = process.env.PORT || 5001;
@@ -22,7 +22,7 @@ app.use(cookieParser());
 
 app.use("/api/auth", authRouter);
 app.use("/api/messages", messageRouter);
-app.use("/api/friends", friendsRouter);
+app.use("/api/friends", chatRouter);
 
 // app.use((err, req, res, next) => {
 //   console.error("Error:", err.message);

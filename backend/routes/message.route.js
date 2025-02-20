@@ -4,14 +4,14 @@ import {
   deleteMessage,
   editMessage,
   getMessages,
-  getUserForSidebar,
+  getChatsForSidebar,
   sendMessage,
 } from "../controllers/message.controller.js";
 import catchAsync from "../utils/catchAsync.js";
 
 const messageRouter = express.Router();
 
-messageRouter.get("/users", protectRoute, getUserForSidebar);
+messageRouter.get("/users", protectRoute, getChatsForSidebar);
 messageRouter.get("/:id", protectRoute, getMessages);
 
 messageRouter.post("/send/:id", protectRoute, sendMessage);

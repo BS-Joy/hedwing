@@ -1,10 +1,18 @@
 import { useState } from "react";
-import { ModalWrapper } from "../../ModalWrapper";
-import UserModalCard from "./UserModalCard";
 import { PiUsersThreeThin } from "react-icons/pi";
 import { HiUserGroup } from "react-icons/hi2";
+import { useChatStore } from "../../../store/useChatStore";
 
-const SearchResults = ({ results, isLoading, searchTerm }) => {
+const SearchResults = ({
+  results,
+  isLoading,
+  searchTerm,
+  setResults,
+  setIsLoading,
+  setSearchTerm,
+}) => {
+  const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } =
+    useChatStore();
   const [modalUser, setModalUser] = useState(null);
   if (results.length === 0 && !isLoading && searchTerm) {
     return (
@@ -34,8 +42,10 @@ const SearchResults = ({ results, isLoading, searchTerm }) => {
               key={user._id}
               className="px-4 py-2 hover:bg-base-200 cursor-pointer"
               onClick={() => {
-                setModalUser(user);
-                document.getElementById("my_modal_2").showModal();
+                setSelectedUser(user);
+                setIsLoading(false);
+                setSearchTerm("");
+                setResults([]);
               }}
             >
               {user?.fullName}
@@ -43,9 +53,6 @@ const SearchResults = ({ results, isLoading, searchTerm }) => {
           ))}
         </ul>
       )}
-      <ModalWrapper>
-        {modalUser && <UserModalCard user={modalUser} />}
-      </ModalWrapper>
     </div>
   );
 };

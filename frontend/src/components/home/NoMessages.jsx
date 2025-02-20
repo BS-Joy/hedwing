@@ -4,6 +4,7 @@ import { useChatStore } from "../../store/useChatStore";
 
 export default function NoMessages() {
   const {
+    getUsers,
     sendMessage,
     editMessage,
     sendTypingStatus,
@@ -17,6 +18,7 @@ export default function NoMessages() {
       await sendMessage({
         text: text.trim(),
       });
+      getUsers();
     } catch (error) {
       console.error("Failed to sayhi:", error);
     }
@@ -28,7 +30,7 @@ export default function NoMessages() {
         <div className="flex justify-center gap-4 mb-4">
           <div className="relative">
             <div
-              className="w-16 h-16 rounded-full bg-primary/10 flex items-center
+              className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center
                  justify-center animate-bounce"
             >
               <MessageSquareX className="w-8 h-8 text-primary " />

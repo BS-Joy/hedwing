@@ -1,24 +1,26 @@
 import cloudinary from "../lib/cloudinary.js";
 import { getReceiverSocketId, io } from "../lib/socket.io.js";
+import chatModel from "../models/chat.model.js";
 import messageModel from "../models/message.model.js";
-import userModel from "../models/user.model.js";
 import catchAsync from "../utils/catchAsync.js";
 
 /**
  * Get users for sidebar (excluding the current user)
  */
-export const getUserForSidebar = catchAsync(async (req, res) => {
+export const getChatsForSidebar = catchAsync(async (req, res) => {
   const currentUser = req.user._id;
 
-  const filteredUsers = await userModel
-    .find({ _id: { $ne: currentUser } }) // Corrected variable name
-    .select("-password") // Exclude password field
+  const filteredUsers = await chatModel
+    .find({
+      users: { $in: currentUser }, // Exclude the current user as well as users in the blockList
+    })
+    .populate("users", "-password") // Exclude password field
     .lean();
 
   res.status(200).json({
     success: true,
     message: "All users retrieved successfully.",
-    users: filteredUsers,
+    chats: filteredUsers,
   });
 });
 
@@ -54,6 +56,17 @@ export const sendMessage = catchAsync(async (req, res) => {
   const { id: receiverId } = req.params;
 
   const senderId = req.user._id;
+
+  const room = await chatModel.findOne({
+    users: { $all: [senderId, receiverId] }, // Match chats with both senderId and receiverId
+  });
+
+  if (!room) {
+    const newRoom = await chatModel.create({
+      users: [senderId, receiverId],
+      roomStatus: "okay",
+    });
+  }
 
   let imageUrl;
 
