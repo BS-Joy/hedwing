@@ -60,7 +60,7 @@ export default function MessageContainer({
 
       {/* 3dot dropdown */}
       <div
-        className={`dropdown dropdown-top ${
+        className={`dropdown dropdown-left ${
           msg.senderId === authUser._id
             ? "-left-6 dropdown-end group-hover:block"
             : "-right-6"
@@ -78,7 +78,6 @@ export default function MessageContainer({
           <li>
             <button
               onClick={() => {
-                console.log(msg.text);
                 setMessage(msg);
               }}
               className="flex hover:text-blue-400"

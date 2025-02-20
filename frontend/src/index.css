@@ -6,7 +6,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy:ital@0;1&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
-
 @import "tailwindcss";
 
 @plugin 'tailwind-scrollbar' {
@@ -18,6 +17,7 @@
     themes: all;
 }
 
+@plugin 'tailwindcss-animate';
 
 @font-face {
     font-family: magicSchool1;
@@ -56,6 +56,3 @@
         font-family: "Fondamento", serif;
     }
 }
-
-
-@layer components {}

@@ -7,6 +7,7 @@ import { useAuthStore } from "../../store/useAuthStore";
 import defaultAvatar from "../../assets/avatar.png";
 import { formatMessageTime } from "../../utils/formatMessageTime";
 import MessageContainer from "./MessageContainer";
+import NoMessages from "./NoMessages";
 
 export default function ChatContainer() {
   const {
@@ -53,44 +54,48 @@ export default function ChatContainer() {
       <ChatHeader />
       {/* messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages?.map((msg) => (
-          <div
-            key={msg._id}
-            className={`chat ${
-              msg.senderId === authUser._id ? "chat-end" : "chat-start"
-            } group`}
-            ref={messageEndRef}
-          >
-            {/* user avatar */}
-            <div className="chat-image avatar">
-              <div className="size-10 rounded-full border">
-                <img
-                  src={
-                    msg?.senderId === authUser?._id
-                      ? authUser?.profilePic || defaultAvatar
-                      : selectedUser?.profilePic || defaultAvatar
-                  }
-                  alt={`profile pic`}
-                />
+        {messages?.length === 0 ? (
+          <NoMessages />
+        ) : (
+          messages?.map((msg) => (
+            <div
+              key={msg._id}
+              className={`chat ${
+                msg.senderId === authUser._id ? "chat-end" : "chat-start"
+              } group`}
+              ref={messageEndRef}
+            >
+              {/* user avatar */}
+              <div className="chat-image avatar">
+                <div className="size-10 rounded-full border">
+                  <img
+                    src={
+                      msg?.senderId === authUser?._id
+                        ? authUser?.profilePic || defaultAvatar
+                        : selectedUser?.profilePic || defaultAvatar
+                    }
+                    alt={`profile pic`}
+                  />
+                </div>
               </div>
-            </div>
 
-            {/* msg time */}
-            <div className="chat-header mb-1">
-              <time className="text-xs opacity-50 ml-1">
-                {formatMessageTime(msg?.createdAt)}
-              </time>
-            </div>
+              {/* msg time */}
+              <div className="chat-header mb-1">
+                <time className="text-xs opacity-50 ml-1">
+                  {formatMessageTime(msg?.createdAt)}
+                </time>
+              </div>
 
-            {/* message */}
-            <MessageContainer
-              msg={msg}
-              setMessage={setMessage}
-              loading={loading}
-              setLoading={setLoading}
-            />
-          </div>
-        ))}
+              {/* message */}
+              <MessageContainer
+                msg={msg}
+                setMessage={setMessage}
+                loading={loading}
+                setLoading={setLoading}
+              />
+            </div>
+          ))
+        )}
       </div>
       <MessageInput msg={message} setMsg={setMessage} />
     </div>

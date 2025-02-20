@@ -23,7 +23,7 @@ export default function UserModalCard({ user }) {
       <div className="flex w-full justify-center py-2">
         <div className="space-y-1 text-center">
           <p className="text-gray-500 dark:text-white/70">Friends </p>
-          <p className="font-mono text-xl text-gray-700 dark:text-white/50">
+          <p className="font-mono text-xl text-gray-500 dark:text-white/50">
             11
           </p>
         </div>

@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { ModalWrapper } from "../../ModalWrapper";
 import UserModalCard from "./UserModalCard";
+import { PiUsersThreeThin } from "react-icons/pi";
+import { HiUserGroup } from "react-icons/hi2";
 
 const SearchResults = ({ results, isLoading, searchTerm }) => {
   const [modalUser, setModalUser] = useState(null);
@@ -17,31 +19,26 @@ const SearchResults = ({ results, isLoading, searchTerm }) => {
   if (results.length === 0 && !isLoading) return null;
 
   return (
-    <div className="w-full bg-base-100 border border-primary rounded-md shadow-lg absolute z-10">
+    <div className="w-full bg-base-100 border rounded-md shadow-lg absolute z-10">
       {isLoading ? (
         <div className="p-4 text-center text-base-content">
           <span className="loading loading-ring loading-md"></span>
         </div>
       ) : (
         <ul className="py-2 max-h-[350px] h-full overflow-y-auto scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thin">
-          <p className="pl-4 text-sm font-thin font-alegreya">
-            Showing total {results?.length} users.
+          <p className="pl-4 text-sm font-thin font-alegreya border-b-[.2px] pb-2  flex items-center gap-2">
+            <HiUserGroup /> Showing total {results?.length} users.
           </p>
           {results.map((user) => (
             <li
               key={user._id}
               className="px-4 py-2 hover:bg-base-200 cursor-pointer"
-              onClick={() => setModalUser(user)}
+              onClick={() => {
+                setModalUser(user);
+                document.getElementById("my_modal_2").showModal();
+              }}
             >
-              <button
-                className="px-4 py-2 hover:bg-base-200 cursor-pointer"
-                onClick={() =>
-                  document.getElementById("my_modal_2").showModal()
-                }
-              >
-                {user?.fullName}
-              </button>
-              {/* {user.fullName} */}
+              {user?.fullName}
             </li>
           ))}
         </ul>
