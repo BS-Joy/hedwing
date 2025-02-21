@@ -22,8 +22,6 @@ const Sidebar = () => {
     return { ...siUsers, roomStatus: chat.roomStatus, roomId: chat._id };
   });
 
-  // console.log(refinedUsers);
-
   const filteredUsers = showOnlineOnly
     ? refinedUsers?.filter((user) => onlineUsers?.includes(user?._id))
     : refinedUsers;

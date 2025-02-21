@@ -33,6 +33,8 @@ export default function ChatContainer() {
     return () => unsubscribeFromMessages();
   }, [selectedUser, getMessages, subscribeToMessages, unsubscribeFromMessages]);
 
+  console.log(selectedUser);
+
   useEffect(() => {
     if (messageEndRef?.current && messages) {
       messageEndRef.current.scrollIntoView({ behavior: "smooth" });
@@ -97,7 +99,11 @@ export default function ChatContainer() {
           ))
         )}
       </div>
-      <MessageInput msg={message} setMsg={setMessage} />
+      {selectedUser?.roomStatus === "blocked" ? (
+        <p className="text-center">You cant't replay to this conversation</p>
+      ) : (
+        <MessageInput msg={message} setMsg={setMessage} />
+      )}
     </div>
   );
 }
