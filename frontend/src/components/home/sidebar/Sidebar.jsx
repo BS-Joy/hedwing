@@ -19,8 +19,10 @@ const Sidebar = () => {
   const refinedUsers = users.map((chat) => {
     const siUsers = chat?.users?.find((user) => user?._id !== authUser?._id);
 
-    return siUsers;
+    return { ...siUsers, roomStatus: chat.roomStatus, roomId: chat._id };
   });
+
+  // console.log(refinedUsers);
 
   const filteredUsers = showOnlineOnly
     ? refinedUsers?.filter((user) => onlineUsers?.includes(user?._id))

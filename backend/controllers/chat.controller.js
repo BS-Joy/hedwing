@@ -26,6 +26,7 @@ export const blockChat = catchAsync(async (req, res) => {
 
   myData.blockList.push(toBlock);
   chatRoom.roomStatus = "blocked";
+  chatRoom.blockdBy = currentUser._id;
 
   myData.save();
   chatRoom.save();
