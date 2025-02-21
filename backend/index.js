@@ -22,7 +22,7 @@ app.use(cookieParser());
 
 app.use("/api/auth", authRouter);
 app.use("/api/messages", messageRouter);
-app.use("/api/friends", chatRouter);
+app.use("/api/chat", chatRouter);
 
 // app.use((err, req, res, next) => {
 //   console.error("Error:", err.message);

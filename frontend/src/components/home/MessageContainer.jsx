@@ -1,7 +1,6 @@
 import { EllipsisVertical, Pencil, Trash2 } from "lucide-react";
 import { useAuthStore } from "../../store/useAuthStore";
 import { axiosInstance } from "../../lib/axios";
-import { useState } from "react";
 import toast from "react-hot-toast";
 import { useChatStore } from "../../store/useChatStore";
 import { Check } from "lucide-react";
