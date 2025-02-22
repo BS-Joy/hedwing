@@ -45,11 +45,25 @@ export const useChatStore = create((set, get) => ({
     set({ messages: newMessages });
   },
 
-  getUsers: async () => {
+  getUsers: async (authUser) => {
     try {
       set({ isUsersLoading: true });
       const res = await axiosInstance.get("/messages/users");
-      set({ users: res.data?.chats });
+      const refinedUsers = res.data?.chats.map((chat) => {
+        const siUsers = chat?.users?.find(
+          (user) => user?._id !== authUser?._id
+        );
+
+        return {
+          ...siUsers,
+          roomStatus: chat.roomStatus,
+          roomId: chat._id,
+          blockdBy: chat?.blockdBy || "",
+        };
+      });
+
+      console.log(refinedUsers);
+      set({ users: refinedUsers });
     } catch (error) {
       toast.error(
         error.response.data.message ||
@@ -122,5 +136,5 @@ export const useChatStore = create((set, get) => ({
   },
 
   setSelectedUser: (selectedUser) => set({ selectedUser }),
-  // setUsers: (selectedUser) => set({ users: selectedUser }),
+  setUsers: (newUsers) => set({ users: newUsers }),
 }));

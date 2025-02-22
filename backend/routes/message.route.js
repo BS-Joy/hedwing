@@ -7,7 +7,6 @@ import {
   getChatsForSidebar,
   sendMessage,
 } from "../controllers/message.controller.js";
-import catchAsync from "../utils/catchAsync.js";
 
 const messageRouter = express.Router();
 

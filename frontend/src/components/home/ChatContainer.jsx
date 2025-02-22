@@ -20,6 +20,8 @@ export default function ChatContainer() {
     setSelectedUser,
     subscribeToMessages,
     unsubscribeFromMessages,
+    users,
+    setUsers,
   } = useChatStore();
 
   const [message, setMessage] = useState("");
@@ -40,13 +42,28 @@ export default function ChatContainer() {
       if (res.data.success) {
         toast.success("Chat successfuly unblocked now.");
         const modifiedSelectedUser = { ...selectedUser };
+        const modifiedUsers = { ...users };
+
+        console.log(modifiedUsers);
+
         modifiedSelectedUser.roomStatus = "okay";
-        (modifiedSelectedUser.blockdBy = ""),
-          setSelectedUser(modifiedSelectedUser);
+        modifiedSelectedUser.blockdBy = "";
+        setSelectedUser(modifiedSelectedUser);
+
+        const newUsers = modifiedUsers.map((user) => {
+          if (user?.id === selectedUser._id) {
+            user.roomStatus = "okay";
+            user.blockdBy = "";
+          }
+        });
+
+        setUsers(newUsers);
+
         setBlockLoading(false);
       }
     } catch (error) {
       setBlockLoading(false);
+      console.log(error);
       toast.error(
         error.response?.data?.message ||
           "Something went wrong during chat unblock!"

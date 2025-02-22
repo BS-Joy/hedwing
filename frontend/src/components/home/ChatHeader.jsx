@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 import { useState } from "react";
 
 const ChatHeader = () => {
-  const { selectedUser, setSelectedUser } = useChatStore();
+  const { selectedUser, setSelectedUser, users, setUsers } = useChatStore();
   const { onlineUsers, authUser } = useAuthStore();
   const [loading, setLoading] = useState(false);
 
@@ -25,13 +25,29 @@ const ChatHeader = () => {
       if (res.data.success) {
         toast.success("Chat is blocked now.");
         const modifiedSelectedUser = { ...selectedUser };
+        const modifiedUsers = [...users];
+
+        console.log(modifiedUsers);
+
         modifiedSelectedUser.roomStatus = "blocked";
-        (modifiedSelectedUser.blockdBy = authUser._id),
-          setSelectedUser(modifiedSelectedUser);
+        modifiedSelectedUser.blockdBy = authUser._id;
+        setSelectedUser(modifiedSelectedUser);
+
+        const newUsers = modifiedUsers.map((user) => {
+          if (user?.id === selectedUser._id) {
+            user.roomStatus = "blocked";
+            user.blockdBy = authUser._id;
+          }
+        });
+
+        setUsers(newUsers);
+
         setLoading(false);
         modal.close();
+        // getUsers();
       }
     } catch (error) {
+      console.log(error);
       setLoading(false);
       toast.error(
         error.response.data.message || "Something went wrong during chat block!"

@@ -16,24 +16,24 @@ const Sidebar = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
 
-  const refinedUsers = users.map((chat) => {
-    const siUsers = chat?.users?.find((user) => user?._id !== authUser?._id);
+  // const refinedUsers = users.map((chat) => {
+  //   const siUsers = chat?.users?.find((user) => user?._id !== authUser?._id);
 
-    return {
-      ...siUsers,
-      roomStatus: chat.roomStatus,
-      roomId: chat._id,
-      blockdBy: chat?.blockdBy || "",
-    };
-  });
+  //   return {
+  //     ...siUsers,
+  //     roomStatus: chat.roomStatus,
+  //     roomId: chat._id,
+  //     blockdBy: chat?.blockdBy || "",
+  //   };
+  // });
 
   const filteredUsers = showOnlineOnly
-    ? refinedUsers?.filter((user) => onlineUsers?.includes(user?._id))
-    : refinedUsers;
+    ? users?.filter((user) => onlineUsers?.includes(user?._id))
+    : users;
 
   useEffect(() => {
-    getUsers();
-  }, [getUsers]);
+    getUsers(authUser);
+  }, [getUsers, authUser]);
 
   if (isUsersLoading) return <SidebarSkeleton />;
 

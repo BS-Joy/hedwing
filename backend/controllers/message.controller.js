@@ -14,7 +14,8 @@ export const getChatsForSidebar = catchAsync(async (req, res) => {
     .find({
       users: { $in: currentUser }, // Exclude the current user as well as users in the blockList
     })
-    .populate("users", "-password") // Exclude password field
+    .populate("users") // Exclude password field
+    .select("-password")
     .lean();
 
   res.status(200).json({

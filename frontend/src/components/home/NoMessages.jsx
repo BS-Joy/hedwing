@@ -1,16 +1,12 @@
 import { GiOwl } from "react-icons/gi";
 import { MessageSquareX, Hand } from "lucide-react";
 import { useChatStore } from "../../store/useChatStore";
+import { useAuthStore } from "../../store/useAuthStore";
 
 export default function NoMessages() {
-  const {
-    getUsers,
-    sendMessage,
-    editMessage,
-    sendTypingStatus,
-    selectedUser,
-    listenForTypingEvents,
-  } = useChatStore();
+  const { getUsers, sendMessage } = useChatStore();
+
+  const { authUser } = useAuthStore();
 
   const sayHi = async () => {
     const text = "Hi";
@@ -18,7 +14,7 @@ export default function NoMessages() {
       await sendMessage({
         text: text.trim(),
       });
-      getUsers();
+      getUsers(authUser);
     } catch (error) {
       console.error("Failed to sayhi:", error);
     }
