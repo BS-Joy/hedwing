@@ -2,15 +2,42 @@ import { X } from "lucide-react";
 import { useChatStore } from "../../store/useChatStore";
 import { useAuthStore } from "../../store/useAuthStore";
 import defaultAvatar from "../../assets/avatar.png";
-import { EllipsisVertical, ShieldBan, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { ShieldBan } from "lucide-react";
 import { ModalWrapper } from "../ModalWrapper";
+import { axiosInstance } from "../../lib/axios";
+import toast from "react-hot-toast";
+import { useState } from "react";
 
 const ChatHeader = () => {
   const { selectedUser, setSelectedUser } = useChatStore();
-  const { onlineUsers } = useAuthStore();
+  const { onlineUsers, authUser } = useAuthStore();
+  const [loading, setLoading] = useState(false);
 
-  const [openModal, setOpenModal] = useState(false);
+  const modal = document.getElementById("my_modal_2"); // Get modal element
+
+  const handleBlockChat = async () => {
+    try {
+      setLoading(true);
+      const res = await axiosInstance.patch("/chat/block", {
+        toBlock: selectedUser?._id,
+      });
+
+      if (res.data.success) {
+        toast.success("Chat is blocked now.");
+        const modifiedSelectedUser = { ...selectedUser };
+        modifiedSelectedUser.roomStatus = "blocked";
+        (modifiedSelectedUser.blockdBy = authUser._id),
+          setSelectedUser(modifiedSelectedUser);
+        setLoading(false);
+        modal.close();
+      }
+    } catch (error) {
+      setLoading(false);
+      toast.error(
+        error.response.data.message || "Something went wrong during chat block!"
+      );
+    }
+  };
 
   return (
     <div className="p-2.5 border-b border-base-300">
@@ -36,26 +63,16 @@ const ChatHeader = () => {
         </div>
 
         <div className="flex items-center gap-4">
-          {/* 3dot dropdown */}
-          {/* <div className="dropdown dropdown-end">
-            <div tabIndex={0} role="button" className="cursor-pointer m-1">
-              <EllipsisVertical />
-            </div>
-            <ul
-              tabIndex={0}
-              className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
+          {selectedUser?.roomStatus === "okay" && (
+            <button
+              onClick={() => document.getElementById("my_modal_2").showModal()}
+              className="px-4 py-2 p-2 rounded-lg text-red-500  btn btn-soft hover:bg-red-100/80 hover:text-red-500 cursor-pointer border-none font-lumanosimo"
             >
-              <li>
-                <a>Delete this chat</a>
-              </li>
-            </ul>
-          </div> */}
-          <button
-            onClick={() => document.getElementById("my_modal_2").showModal()}
-            className="px-4 py-2 p-2 rounded-lg text-red-500  btn btn-soft hover:bg-red-100/80 hover:text-red-500 cursor-pointer border-none font-lumanosimo"
-          >
-            Block
-          </button>
+              Block
+            </button>
+          )}
+
+          {/* chat block confirmation modal */}
           <ModalWrapper>
             <div
               className="flex max-h-[90vh]  flex-col gap-6 overflow-hidden rounded p-6 text-center text-slate-500 shadow-xl shadow-slate-700/10"
@@ -76,8 +93,15 @@ const ChatHeader = () => {
               </div>
               {/*        <!-- Modal actions --> */}
               <div className="flex justify-start gap-2">
-                <button className="inline-flex items-center justify-center flex-1 h-10 gap-2 px-5 text-sm font-medium tracking-wide text-white transition duration-300 rounded whitespace-nowrap btn bg-red-500/90 hover:bg-red-500">
-                  <span>Yes, I'm sure</span>
+                <button
+                  onClick={handleBlockChat}
+                  className="inline-flex items-center justify-center flex-1 h-10 gap-2 px-5 text-sm font-medium tracking-wide text-white transition duration-300 rounded whitespace-nowrap btn bg-red-500/90 hover:bg-red-500"
+                >
+                  {loading ? (
+                    <span className="loading loading-dots loading-lg"></span>
+                  ) : (
+                    "Yes, I'm sure"
+                  )}
                 </button>
                 <form
                   method="dialog"

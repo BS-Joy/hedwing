@@ -19,7 +19,12 @@ const Sidebar = () => {
   const refinedUsers = users.map((chat) => {
     const siUsers = chat?.users?.find((user) => user?._id !== authUser?._id);
 
-    return { ...siUsers, roomStatus: chat.roomStatus, roomId: chat._id };
+    return {
+      ...siUsers,
+      roomStatus: chat.roomStatus,
+      roomId: chat._id,
+      blockdBy: chat?.blockdBy || "",
+    };
   });
 
   const filteredUsers = showOnlineOnly
@@ -112,7 +117,13 @@ const Sidebar = () => {
 
         {filteredUsers.length === 0 && (
           <div className="text-center w-full text-zinc-500 py-4">
-            No online users
+            {showOnlineOnly ? (
+              "No online users"
+            ) : (
+              <p className="text-sm">
+                You have no connection yet. Search for new connection.
+              </p>
+            )}
           </div>
         )}
       </div>

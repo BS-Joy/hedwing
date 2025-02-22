@@ -83,6 +83,7 @@ export const sendMessage = catchAsync(async (req, res) => {
     receiverId,
     text,
     image: imageUrl || "",
+    readBy: [senderId],
   });
 
   //   realtime functionlity goes here ==> socket.io
@@ -188,3 +189,16 @@ export const editMessage = catchAsync(async (req, res) => {
     updatedMessage: editRes,
   });
 });
+
+/**
+ * markMessageAsSeen
+ */
+const markMessageAsSeen = async (messageId, userId) => {
+  const message = await messageModel.findById(messageId);
+
+  // Check if the user has already marked the message as seen
+  if (!message.readBy.includes(userId)) {
+    message.readBy.push(userId);
+    await message.save();
+  }
+};

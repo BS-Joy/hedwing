@@ -8,6 +8,8 @@ import defaultAvatar from "../../assets/avatar.png";
 import { formatMessageTime } from "../../utils/formatMessageTime";
 import MessageContainer from "./MessageContainer";
 import NoMessages from "./NoMessages";
+import toast from "react-hot-toast";
+import { axiosInstance } from "../../lib/axios";
 
 export default function ChatContainer() {
   const {
@@ -15,16 +17,42 @@ export default function ChatContainer() {
     getMessages,
     isMessagesLoading,
     selectedUser,
+    setSelectedUser,
     subscribeToMessages,
     unsubscribeFromMessages,
   } = useChatStore();
 
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [blockLoading, setBlockLoading] = useState(false);
 
   const { authUser } = useAuthStore();
 
   const messageEndRef = useRef(null);
+
+  const handleUnblockChat = async () => {
+    try {
+      setBlockLoading(true);
+      const res = await axiosInstance.patch("/chat/unblock", {
+        toUnblock: selectedUser?._id,
+      });
+
+      if (res.data.success) {
+        toast.success("Chat successfuly unblocked now.");
+        const modifiedSelectedUser = { ...selectedUser };
+        modifiedSelectedUser.roomStatus = "okay";
+        (modifiedSelectedUser.blockdBy = ""),
+          setSelectedUser(modifiedSelectedUser);
+        setBlockLoading(false);
+      }
+    } catch (error) {
+      setBlockLoading(false);
+      toast.error(
+        error.response?.data?.message ||
+          "Something went wrong during chat unblock!"
+      );
+    }
+  };
 
   useEffect(() => {
     getMessages(selectedUser?._id);
@@ -32,8 +60,6 @@ export default function ChatContainer() {
 
     return () => unsubscribeFromMessages();
   }, [selectedUser, getMessages, subscribeToMessages, unsubscribeFromMessages]);
-
-  console.log(selectedUser);
 
   useEffect(() => {
     if (messageEndRef?.current && messages) {
@@ -100,7 +126,25 @@ export default function ChatContainer() {
         )}
       </div>
       {selectedUser?.roomStatus === "blocked" ? (
-        <p className="text-center">You cant't replay to this conversation</p>
+        selectedUser?.blockdBy === authUser?._id ? (
+          <p className="text-center pb-4 font-alegreya text-error">
+            You have blocked this chat.{" "}
+            <button
+              onClick={handleUnblockChat}
+              className="underline cursor-pointer"
+            >
+              {blockLoading ? (
+                <span className="loading loading-dots loading-lg"></span>
+              ) : (
+                "Unblock now."
+              )}
+            </button>
+          </p>
+        ) : (
+          <p className="text-center pb-4">
+            You cant't replay to this conversation
+          </p>
+        )
       ) : (
         <MessageInput msg={message} setMsg={setMessage} />
       )}

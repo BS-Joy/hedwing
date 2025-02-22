@@ -28,6 +28,7 @@ io.on("connection", (socket) => {
   // used to broadcast online status to all the connected clients
   io.emit("getOnlineUsers", Object.keys(userSocketMap));
 
+  // for getting typing status
   socket.on("typing", ({ senderId, receiverId }) => {
     const receiverSocketId = getReceiverSocketId(receiverId);
 
@@ -36,11 +37,18 @@ io.on("connection", (socket) => {
     }
   });
 
+  // get status when typing stopped
   socket.on("stopTyping", ({ senderId, receiverId }) => {
     const receiverSocketId = getReceiverSocketId(receiverId);
     if (receiverSocketId) {
       io.to(receiverSocketId).emit("userStopTyping", { senderId });
     }
+  });
+
+  // when message seen
+  socket.on("message-seen", async ({ messageId, userId }) => {
+    await markMessageAsSeen(messageId, userId); // Mark the message as seen
+    io.emit("update-message-status", { messageId, userId }); // Notify all connected clients
   });
 
   socket.on("disconnect", () => {
