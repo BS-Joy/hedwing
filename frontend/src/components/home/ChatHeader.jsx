@@ -34,10 +34,12 @@ const ChatHeader = () => {
         setSelectedUser(modifiedSelectedUser);
 
         const newUsers = modifiedUsers.map((user) => {
-          if (user?.id === selectedUser._id) {
+          if (user?._id === selectedUser._id) {
             user.roomStatus = "blocked";
             user.blockdBy = authUser._id;
           }
+
+          return user;
         });
 
         setUsers(newUsers);

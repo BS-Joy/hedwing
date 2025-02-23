@@ -42,7 +42,7 @@ export default function ChatContainer() {
       if (res.data.success) {
         toast.success("Chat successfuly unblocked now.");
         const modifiedSelectedUser = { ...selectedUser };
-        const modifiedUsers = { ...users };
+        const modifiedUsers = [...users];
 
         console.log(modifiedUsers);
 
@@ -51,10 +51,11 @@ export default function ChatContainer() {
         setSelectedUser(modifiedSelectedUser);
 
         const newUsers = modifiedUsers.map((user) => {
-          if (user?.id === selectedUser._id) {
+          if (user?._id === selectedUser._id) {
             user.roomStatus = "okay";
             user.blockdBy = "";
           }
+          return user;
         });
 
         setUsers(newUsers);
