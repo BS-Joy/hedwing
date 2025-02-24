@@ -87,6 +87,7 @@ const MessageInput = ({ msg, setMsg }) => {
           ...msg,
           text: text,
         });
+        setIsEditing(false);
       } else {
         await sendMessage({
           text: text.trim(),

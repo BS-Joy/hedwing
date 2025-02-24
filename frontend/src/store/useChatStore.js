@@ -128,8 +128,6 @@ export const useChatStore = create((set, get) => ({
     socket.on("newMessage", (newMessage) => {
       const { selectedUser, users } = get();
 
-      console.log(selectedUser);
-
       // Check if the message is from the currently selected chat
       if (!selectedUser || newMessage.senderId !== selectedUser._id) {
         // Update unseen count for the sender
