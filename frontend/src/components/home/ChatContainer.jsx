@@ -25,7 +25,7 @@ export default function ChatContainer() {
   } = useChatStore();
 
   const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [blockLoading, setBlockLoading] = useState(false);
 
   const { authUser } = useAuthStore();
@@ -135,8 +135,8 @@ export default function ChatContainer() {
               <MessageContainer
                 msg={msg}
                 setMessage={setMessage}
-                loading={loading}
-                setLoading={setLoading}
+                // loading={loading}
+                // setLoading={setLoading}
               />
             </div>
           ))

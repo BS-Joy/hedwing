@@ -80,15 +80,25 @@ export const sendMessage = catchAsync(async (req, res) => {
     imageUrl = uploadRes.secure_url;
   }
 
+  const roomId = room ? room?._id : newRoom?._id;
+
   // Create and save message
   const newMessage = await messageModel.create({
     senderId,
     receiverId,
-    chatId: room ? room?._id : newRoom?._id,
+    chatId: roomId,
     text,
     image: imageUrl || "",
     readBy: [senderId],
   });
+
+  await chatModel.findByIdAndUpdate(
+    roomId,
+    {
+      lastMessage: newMessage?._id,
+    },
+    { new: true }
+  );
 
   //   realtime functionlity goes here ==> socket.io
   const receiverSocketId = getReceiverSocketId(receiverId);

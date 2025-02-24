@@ -9,8 +9,8 @@ import { useEffect } from "react";
 export default function MessageContainer({
   msg,
   setMessage,
-  loading,
-  setLoading,
+  // loading,
+  // setLoading,
 }) {
   const { authUser, socket } = useAuthStore();
 
@@ -20,9 +20,9 @@ export default function MessageContainer({
   useEffect(() => {
     onDeleteMessage();
     // Optionally, return a cleanup function:
-    return () => {
-      socket.off("deleteMessage");
-    };
+    // return () => {
+    //   socket.off("deleteMessage");
+    // };
   }, [onDeleteMessage]);
 
   useEffect(() => {
@@ -35,7 +35,6 @@ export default function MessageContainer({
 
   const handleDeleteMessage = async () => {
     try {
-      setLoading(true);
       const res = await axiosInstance.delete(`/messages/delete/${msg._id}`);
 
       if (res?.data?.success) {
@@ -43,13 +42,13 @@ export default function MessageContainer({
         const newMessages = messages.filter(
           (msg) => msg._id !== res.data.response._id
         );
+
         setMessages(newMessages);
 
         toast.success(res?.data?.message || "Message deleted successfully.");
-        setLoading(false);
       }
     } catch (error) {
-      setLoading(false);
+      console.log(error);
       toast.error(
         error.response.data.message ||
           "Something went wrong during message deletation!"
@@ -58,23 +57,14 @@ export default function MessageContainer({
   };
   return (
     <div className="chat-bubble max-w-[80%] sm:max-w-[50%] relative flex flex-col bg-[#E4D8B4]">
-      {loading ? (
-        <span className="loading loading-dots text-[#555144] loading-xs"></span>
-      ) : (
-        // messages
-        <>
-          {msg?.image && (
-            <img
-              src={msg?.image}
-              alt="msg attachd image"
-              className="sm:max-w-[150px] rounded-md mb-2"
-            />
-          )}
-          {msg.text && (
-            <p className="font-lumanosimo text-[#555144]">{msg.text}</p>
-          )}
-        </>
+      {msg?.image && (
+        <img
+          src={msg?.image}
+          alt="msg attachd image"
+          className="sm:max-w-[150px] rounded-md mb-2"
+        />
       )}
+      {msg.text && <p className="font-lumanosimo text-[#555144]">{msg.text}</p>}
 
       {/* 3dot dropdown */}
       <div

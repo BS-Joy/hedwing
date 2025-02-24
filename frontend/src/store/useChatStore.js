@@ -48,7 +48,14 @@ export const useChatStore = create((set, get) => ({
     try {
       set({ isUsersLoading: true });
       const res = await axiosInstance.get("/messages/users");
-      const refinedUsers = res.data?.chats.map((chat) => {
+      const allChats = res.data?.chats;
+
+      // Sort the chats by updatedAt (most recent first)
+      const sortedChats = allChats.sort(
+        (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
+      );
+
+      const refinedUsers = sortedChats.map((chat) => {
         const siUsers = chat?.users?.find(
           (user) => user?._id !== authUser?._id
         );
@@ -123,13 +130,15 @@ export const useChatStore = create((set, get) => ({
   },
 
   subscribeToMessages: () => {
-    // console.dir("Subscribing messages");
     const socket = useAuthStore.getState().socket;
     socket.on("newMessage", (newMessage) => {
       const { selectedUser, users } = get();
 
+      // console.log(selectedUser);
+
       // Check if the message is from the currently selected chat
-      if (!selectedUser || newMessage.senderId !== selectedUser._id) {
+      if (newMessage.senderId !== selectedUser._id || !selectedUser) {
+        console.log("i am here");
         // Update unseen count for the sender
         const updatedUsers = users.map((user) => {
           if (user._id === newMessage.senderId) {
@@ -160,15 +169,14 @@ export const useChatStore = create((set, get) => ({
 
   onDeleteMessage: () => {
     const socket = useAuthStore.getState().socket;
-
     socket.off("deleteMessage");
 
-    const { messages } = get();
-
     socket.on("deleteMessage", (msgId) => {
-      console.log(msgId);
-      const updatedMsgs = messages.filter((msg) => msg._id !== msgId);
-      set({ messages: updatedMsgs });
+      set((state) => ({
+        messages: state.messages.filter(
+          (msg) => msg._id.toString() !== msgId.toString()
+        ),
+      }));
     });
   },
 
@@ -177,18 +185,17 @@ export const useChatStore = create((set, get) => ({
 
     socket.off("updateMessage");
 
-    const { messages } = get();
-
     socket.on("updateMessage", (editedMessage) => {
-      const updatedMessages = messages.map((msg) => {
-        if (msg._id === editedMessage?._id) {
-          msg.text = editedMessage.text;
-          msg.edited = editedMessage?.edited;
-        }
+      set((state) => ({
+        messages: state.messages.map((msg) => {
+          if (msg._id === editedMessage?._id) {
+            msg.text = editedMessage.text;
+            msg.edited = editedMessage?.edited;
+          }
 
-        return msg;
-      });
-      set({ messages: updatedMessages });
+          return msg;
+        }),
+      }));
     });
   },
 

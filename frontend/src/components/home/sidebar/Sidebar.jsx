@@ -119,6 +119,12 @@ const Sidebar = () => {
             rounded-full ring-2 ring-zinc-900"
                 />
               )}
+
+              {user.unseenCount > 0 && (
+                <div className="badge badge-primary absolute -top-2 -right-3 size-6 block sm:hidden">
+                  {user.unseenCount}
+                </div>
+              )}
             </div>
 
             {/* User info - only visible on larger screens */}
