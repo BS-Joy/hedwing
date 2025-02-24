@@ -3,7 +3,7 @@ import { useAuthStore } from "../../store/useAuthStore";
 import { axiosInstance } from "../../lib/axios";
 import toast from "react-hot-toast";
 import { useChatStore } from "../../store/useChatStore";
-import { Check } from "lucide-react";
+import { Check, CheckCheck } from "lucide-react";
 import { useEffect } from "react";
 
 export default function MessageContainer({
@@ -14,8 +14,13 @@ export default function MessageContainer({
 }) {
   const { authUser, socket } = useAuthStore();
 
-  const { messages, setMessages, onDeleteMessage, onUpdateMessage } =
-    useChatStore();
+  const {
+    selectedUser,
+    messages,
+    setMessages,
+    onDeleteMessage,
+    onUpdateMessage,
+  } = useChatStore();
 
   useEffect(() => {
     onDeleteMessage();
@@ -110,7 +115,14 @@ export default function MessageContainer({
         }`}
       >
         {msg?.edited && <p className="font-lumanosimo text-[8px]">(edited)</p>}
-        <p>{msg?.senderId === authUser?._id && <Check size={12} />}</p>
+        <p>
+          {msg?.readBy.includes(authUser._id) &&
+          msg?.readBy.includes(selectedUser._id) ? (
+            <CheckCheck size={12} color="#4fcf00" />
+          ) : (
+            <Check size={12} />
+          )}
+        </p>
       </div>
     </div>
   );

@@ -37,15 +37,31 @@ const Sidebar = () => {
     setSelectedUser(user);
 
     // Optionally, send a "message-seen" event for all messages in that chat
-    messages.forEach((msg) => {
-      if (msg.senderId === user._id && !msg.readBy.includes(authUser._id)) {
-        socket.emit("message-seen", {
-          messageId: msg._id,
-          userId: authUser._id,
-        });
-      }
-    });
+    // messages.forEach((msg) => {
+    //   if (msg.senderId === user._id && !msg.readBy.includes(authUser._id)) {
+    //     socket.emit("message-seen", {
+    //       messageId: msg._id,
+    //       userId: authUser._id,
+    //     });
+    //   }
+    // });
   };
+
+  useEffect(() => {
+    if (selectedUser && messages.length > 0) {
+      messages.forEach((msg) => {
+        if (
+          msg.senderId === selectedUser._id &&
+          !msg.readBy.includes(authUser._id)
+        ) {
+          socket.emit("message-seen", {
+            messageId: msg._id,
+            userId: authUser._id,
+          });
+        }
+      });
+    }
+  }, [selectedUser, messages, authUser, socket]);
 
   useEffect(() => {
     getUsers(authUser);

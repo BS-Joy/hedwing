@@ -4,13 +4,13 @@ import toast from "react-hot-toast";
 import { useAuthStore } from "./useAuthStore";
 
 export const useChatStore = create((set, get) => ({
-  messages: [],
   users: [],
   selectedUser: null,
-
   isUsersLoading: false,
-  isMessagesLoading: false,
   typingUsers: [],
+
+  messages: [],
+  isMessagesLoading: false,
 
   listenForTypingEvents: () => {
     const socket = useAuthStore.getState().socket;
@@ -92,12 +92,15 @@ export const useChatStore = create((set, get) => ({
     }
   },
   sendMessage: async (messageData) => {
+    const onlineUsers = useAuthStore.getState().onlineUsers;
+    const socket = useAuthStore.getState().socket;
     try {
       const { selectedUser, messages } = get();
       const res = await axiosInstance.post(
         `/messages/send/${selectedUser?._id}`,
         messageData
       );
+
       set({ messages: [...messages, res.data?.data] });
     } catch (error) {
       toast.error(error.response.data.message);
@@ -137,7 +140,7 @@ export const useChatStore = create((set, get) => ({
       // console.log(selectedUser);
 
       // Check if the message is from the currently selected chat
-      if (newMessage.senderId !== selectedUser._id || !selectedUser) {
+      if (!selectedUser || newMessage.senderId !== selectedUser._id) {
         console.log("i am here");
         // Update unseen count for the sender
         const updatedUsers = users.map((user) => {
