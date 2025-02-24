@@ -11,7 +11,7 @@ const chatSchema = new mongoose.Schema(
       enum: ["okay", "blocked"],
       default: "okay",
     },
-    blockdBy: {
+    blockedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },

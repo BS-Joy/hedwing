@@ -46,9 +46,19 @@ io.on("connection", (socket) => {
   });
 
   // when message seen
+  // In your socket.io backend (e.g., in your connection handler)
   socket.on("message-seen", async ({ messageId, userId }) => {
-    await markMessageAsSeen(messageId, userId); // Mark the message as seen
-    io.emit("update-message-status", { messageId, userId }); // Notify all connected clients
+    console.log({ messageId, userId });
+    // Update the message document: add the userId to readBy if not already there
+    await messageModel.findByIdAndUpdate(
+      messageId,
+      {
+        $addToSet: { readBy: userId },
+      },
+      { new: true }
+    );
+    // Optionally, emit an event to update the UI in real time
+    io.emit("update-message-status", { messageId, userId });
   });
 
   socket.on("disconnect", () => {

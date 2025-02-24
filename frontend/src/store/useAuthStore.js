@@ -111,18 +111,4 @@ export const useAuthStore = create((set, get) => ({
       set({ isUpdatingProfile: false });
     }
   },
-
-  // search user related
-  // sea: async (searchTerm) => {
-  //   try {
-  //     console.log(searchTerm);
-  //   } catch (error) {
-  //     console.log("error in update profile:", error);
-
-  //     const errMsg =
-  //       error.response.data.message ||
-  //       "Something went wrong during profile update!";
-  //     toast.error(errMsg);
-  //   }
-  // },
 }));

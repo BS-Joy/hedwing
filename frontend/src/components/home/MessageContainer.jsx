@@ -4,6 +4,7 @@ import { axiosInstance } from "../../lib/axios";
 import toast from "react-hot-toast";
 import { useChatStore } from "../../store/useChatStore";
 import { Check } from "lucide-react";
+import { useEffect } from "react";
 
 export default function MessageContainer({
   msg,
@@ -11,9 +12,26 @@ export default function MessageContainer({
   loading,
   setLoading,
 }) {
-  const { authUser } = useAuthStore();
+  const { authUser, socket } = useAuthStore();
 
-  const { messages, setMessages } = useChatStore();
+  const { messages, setMessages, onDeleteMessage, onUpdateMessage } =
+    useChatStore();
+
+  useEffect(() => {
+    onDeleteMessage();
+    // Optionally, return a cleanup function:
+    return () => {
+      socket.off("deleteMessage");
+    };
+  }, [onDeleteMessage]);
+
+  useEffect(() => {
+    onUpdateMessage();
+    // Optionally, return a cleanup function:
+    return () => {
+      socket.off("updateMessage");
+    };
+  }, [onUpdateMessage]);
 
   const handleDeleteMessage = async () => {
     try {
@@ -26,6 +44,7 @@ export default function MessageContainer({
           (msg) => msg._id !== res.data.response._id
         );
         setMessages(newMessages);
+
         toast.success(res?.data?.message || "Message deleted successfully.");
         setLoading(false);
       }

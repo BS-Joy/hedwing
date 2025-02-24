@@ -27,7 +27,7 @@ export const blockChat = catchAsync(async (req, res) => {
 
   myData.blockList.push(toBlock);
   chatRoom.roomStatus = "blocked";
-  chatRoom.blockdBy = currentUser._id;
+  chatRoom.blockedBy = currentUser._id;
 
   myData.save();
   chatRoom.save();
@@ -68,9 +68,9 @@ export const unblockChat = catchAsync(async (req, res) => {
   );
 
   // Reset chat room status if it was blocked by the current user
-  if (chatRoom.blockdBy.toString() === currentUser._id.toString()) {
+  if (chatRoom.blockedBy.toString() === currentUser._id.toString()) {
     chatRoom.roomStatus = "okay";
-    chatRoom.blockdBy = null;
+    chatRoom.blockedBy = null;
   }
 
   await myData.save();

@@ -8,28 +8,44 @@ import SearchUser from "./SearchUser";
 import { UserX, UserSearch } from "lucide-react";
 
 const Sidebar = () => {
-  const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } =
-    useChatStore();
+  const {
+    getUsers,
+    users,
+    selectedUser,
+    setUsers,
+    setSelectedUser,
+    isUsersLoading,
+    messages,
+  } = useChatStore();
 
-  const { onlineUsers, authUser } = useAuthStore();
+  const { onlineUsers, authUser, socket } = useAuthStore();
 
   const [showSearch, setShowSearch] = useState(false);
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
 
-  // const refinedUsers = users.map((chat) => {
-  //   const siUsers = chat?.users?.find((user) => user?._id !== authUser?._id);
-
-  //   return {
-  //     ...siUsers,
-  //     roomStatus: chat.roomStatus,
-  //     roomId: chat._id,
-  //     blockdBy: chat?.blockdBy || "",
-  //   };
-  // });
-
   const filteredUsers = showOnlineOnly
     ? users?.filter((user) => onlineUsers?.includes(user?._id))
     : users;
+
+  const handleSelectUser = (user) => {
+    // Reset unseen count for the selected user
+    const updatedUsers = users.map((u) =>
+      u._id === user._id ? { ...u, unseenCount: 0 } : u
+    );
+
+    setUsers(updatedUsers);
+    setSelectedUser(user);
+
+    // Optionally, send a "message-seen" event for all messages in that chat
+    messages.forEach((msg) => {
+      if (msg.senderId === user._id && !msg.readBy.includes(authUser._id)) {
+        socket.emit("message-seen", {
+          messageId: msg._id,
+          userId: authUser._id,
+        });
+      }
+    });
+  };
 
   useEffect(() => {
     getUsers(authUser);
@@ -44,7 +60,7 @@ const Sidebar = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Users className="size-6" />
-            <span className="font-medium  font-fondamento">Friends</span>
+            <span className="font-medium font-fondamento">Friends</span>
           </div>
           <button
             onClick={() => setShowSearch(!showSearch)}
@@ -80,7 +96,7 @@ const Sidebar = () => {
         {filteredUsers?.map((user) => (
           <button
             key={user._id}
-            onClick={() => setSelectedUser(user)}
+            onClick={() => handleSelectUser(user)}
             className={`
         w-auto p-3 flex items-center gap-3
         hover:bg-base-300 transition-colors hover:cursor-pointer
@@ -106,8 +122,13 @@ const Sidebar = () => {
             </div>
 
             {/* User info - only visible on larger screens */}
-            <div className="hidden sm:block text-left min-w-0">
+            <div className="hidden sm:block text-left min-w-0 relative">
               <h4 className="font-medium  font-cinzel">{user.fullName}</h4>
+              {user.unseenCount > 0 && (
+                <div className="badge badge-primary absolute -right-10 top-0 size-6">
+                  {user.unseenCount}
+                </div>
+              )}
               <div className="text-sm text-zinc-400">
                 {onlineUsers?.includes(user._id) ? "Online" : "Offline"}
               </div>

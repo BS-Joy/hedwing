@@ -27,16 +27,14 @@ const ChatHeader = () => {
         const modifiedSelectedUser = { ...selectedUser };
         const modifiedUsers = [...users];
 
-        console.log(modifiedUsers);
-
         modifiedSelectedUser.roomStatus = "blocked";
-        modifiedSelectedUser.blockdBy = authUser._id;
+        modifiedSelectedUser.blockedBy = authUser._id;
         setSelectedUser(modifiedSelectedUser);
 
         const newUsers = modifiedUsers.map((user) => {
           if (user?._id === selectedUser._id) {
             user.roomStatus = "blocked";
-            user.blockdBy = authUser._id;
+            user.blockedBy = authUser._id;
           }
 
           return user;
@@ -46,7 +44,6 @@ const ChatHeader = () => {
 
         setLoading(false);
         modal.close();
-        // getUsers();
       }
     } catch (error) {
       console.log(error);

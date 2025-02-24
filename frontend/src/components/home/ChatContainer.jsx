@@ -44,16 +44,14 @@ export default function ChatContainer() {
         const modifiedSelectedUser = { ...selectedUser };
         const modifiedUsers = [...users];
 
-        console.log(modifiedUsers);
-
         modifiedSelectedUser.roomStatus = "okay";
-        modifiedSelectedUser.blockdBy = "";
+        modifiedSelectedUser.blockedBy = "";
         setSelectedUser(modifiedSelectedUser);
 
         const newUsers = modifiedUsers.map((user) => {
           if (user?._id === selectedUser._id) {
             user.roomStatus = "okay";
-            user.blockdBy = "";
+            user.blockedBy = "";
           }
           return user;
         });
@@ -74,6 +72,7 @@ export default function ChatContainer() {
 
   useEffect(() => {
     getMessages(selectedUser?._id);
+
     subscribeToMessages();
 
     return () => unsubscribeFromMessages();
@@ -144,7 +143,7 @@ export default function ChatContainer() {
         )}
       </div>
       {selectedUser?.roomStatus === "blocked" ? (
-        selectedUser?.blockdBy === authUser?._id ? (
+        selectedUser?.blockedBy === authUser?._id ? (
           <p className="text-center pb-4 font-alegreya text-error">
             You have blocked this chat.{" "}
             <button

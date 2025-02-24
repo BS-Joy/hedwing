@@ -10,18 +10,18 @@ import catchAsync from "../utils/catchAsync.js";
 export const getChatsForSidebar = catchAsync(async (req, res) => {
   const currentUser = req.user._id;
 
-  const filteredUsers = await chatModel
+  const chats = await chatModel
     .find({
       users: { $in: currentUser }, // Exclude the current user as well as users in the blockList
     })
-    .populate("users") // Exclude password field
-    .select("-password")
+    .populate("users")
+    .select("-password") // Exclude password field
     .lean();
 
   res.status(200).json({
     success: true,
     message: "All users retrieved successfully.",
-    chats: filteredUsers,
+    chats: chats,
   });
 });
 
@@ -62,8 +62,10 @@ export const sendMessage = catchAsync(async (req, res) => {
     users: { $all: [senderId, receiverId] }, // Match chats with both senderId and receiverId
   });
 
+  let newRoom;
+
   if (!room) {
-    const newRoom = await chatModel.create({
+    newRoom = await chatModel.create({
       users: [senderId, receiverId],
       roomStatus: "okay",
     });
@@ -82,6 +84,7 @@ export const sendMessage = catchAsync(async (req, res) => {
   const newMessage = await messageModel.create({
     senderId,
     receiverId,
+    chatId: room ? room?._id : newRoom?._id,
     text,
     image: imageUrl || "",
     readBy: [senderId],
@@ -122,6 +125,12 @@ export const deleteMessage = catchAsync(async (req, res) => {
       success: false,
       message: "Message ID is required.",
     });
+  }
+
+  const receiverSocketId = getReceiverSocketId(theMessage?.receiverId);
+
+  if (receiverSocketId) {
+    io.to(receiverSocketId).emit("deleteMessage", msgId);
   }
 
   const message = await messageModel.findByIdAndDelete(msgId);
@@ -178,16 +187,23 @@ export const editMessage = catchAsync(async (req, res) => {
     });
   }
 
-  const editRes = await messageModel.findByIdAndUpdate(
+  const editedMessage = await messageModel.findByIdAndUpdate(
     updatedMessage._id,
     { text: updatedMessage.text, edited: true },
     { new: true }
   );
 
+  const receiverSocketId = getReceiverSocketId(updatedMessage?.receiverId);
+
+  if (receiverSocketId) {
+    // console.log("updating message: ", editedMessage);
+    io.to(receiverSocketId).emit("updateMessage", editedMessage);
+  }
+
   res.status(200).json({
     success: true,
     message: "Message updated successfully.",
-    updatedMessage: editRes,
+    updatedMessage: editedMessage,
   });
 });
 

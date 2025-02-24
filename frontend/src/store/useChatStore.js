@@ -19,7 +19,6 @@ export const useChatStore = create((set, get) => ({
     if (!socket) return;
 
     socket.on("userTyping", ({ senderId }) => {
-      console.log("On user start typing: ", senderId);
       const x = [...new Set([...typingUsers, senderId])];
       set({ typingUsers: x });
     });
@@ -58,11 +57,11 @@ export const useChatStore = create((set, get) => ({
           ...siUsers,
           roomStatus: chat.roomStatus,
           roomId: chat._id,
-          blockdBy: chat?.blockdBy || "",
+          blockedBy: chat?.blockedBy || "",
         };
       });
 
-      console.log(refinedUsers);
+      // console.log(refinedUsers);
       set({ users: refinedUsers });
     } catch (error) {
       toast.error(
@@ -99,6 +98,7 @@ export const useChatStore = create((set, get) => ({
   },
 
   editMessage: async (msgData) => {
+    const socket = useAuthStore.getState().socket;
     try {
       const { selectedUser, messages } = get();
       const res = await axiosInstance.patch(`/messages/edit`, msgData);
@@ -112,6 +112,10 @@ export const useChatStore = create((set, get) => ({
         return msg;
       });
 
+      socket.on("updateMessage", (editedMessage) => {
+        set({ messages: updatedMessages });
+      });
+
       set({ messages: updatedMessages });
     } catch (error) {
       toast.error(error.response.data.message);
@@ -119,14 +123,74 @@ export const useChatStore = create((set, get) => ({
   },
 
   subscribeToMessages: () => {
-    const { selectedUser } = get();
-    if (!selectedUser) return;
+    // console.dir("Subscribing messages");
+    const socket = useAuthStore.getState().socket;
+    socket.on("newMessage", (newMessage) => {
+      const { selectedUser, users } = get();
 
+      console.log(selectedUser);
+
+      // Check if the message is from the currently selected chat
+      if (!selectedUser || newMessage.senderId !== selectedUser._id) {
+        // Update unseen count for the sender
+        const updatedUsers = users.map((user) => {
+          if (user._id === newMessage.senderId) {
+            return {
+              ...user,
+              unseenCount: (user.unseenCount || 0) + 1,
+              lastMessageTime: newMessage.createdAt,
+            };
+          }
+          return user;
+        });
+
+        console.dir(updatedUsers);
+
+        // Reorder the list: bring the sender to the top based on lastMessageTime
+        updatedUsers.sort((a, b) => {
+          return (
+            new Date(b.lastMessageTime || 0) - new Date(a.lastMessageTime || 0)
+          );
+        });
+        set({ users: updatedUsers });
+      } else {
+        // If message is from the currently active chat, simply add to messages
+        set({ messages: [...get().messages, newMessage] });
+      }
+    });
+  },
+
+  onDeleteMessage: () => {
     const socket = useAuthStore.getState().socket;
 
-    socket.on("newMessage", (newMessage) => {
-      if (newMessage?.senderId !== selectedUser?._id) return;
-      set({ messages: [...get().messages, newMessage] });
+    socket.off("deleteMessage");
+
+    const { messages } = get();
+
+    socket.on("deleteMessage", (msgId) => {
+      console.log(msgId);
+      const updatedMsgs = messages.filter((msg) => msg._id !== msgId);
+      set({ messages: updatedMsgs });
+    });
+  },
+
+  onUpdateMessage: () => {
+    const socket = useAuthStore.getState().socket;
+
+    socket.off("updateMessage");
+
+    const { messages } = get();
+
+    socket.on("updateMessage", (editedMessage) => {
+      const updatedMessages = messages.map((msg) => {
+        if (msg._id === editedMessage?._id) {
+          msg.text = editedMessage.text;
+          msg.edited = editedMessage?.edited;
+        }
+
+        return msg;
+      });
+      set({ messages: updatedMessages });
     });
   },
 
