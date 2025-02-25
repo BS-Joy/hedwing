@@ -49,7 +49,7 @@ io.on("connection", (socket) => {
   // when message seen
   // In your socket.io backend (e.g., in your connection handler)
   socket.on("message-seen", async ({ messageId, userId }) => {
-    console.log({ messageId, userId });
+    // console.log({ messageId, userId });
     // Update the message document: add the userId to readBy if not already there
     await messageModel.findByIdAndUpdate(
       messageId,
@@ -60,6 +60,11 @@ io.on("connection", (socket) => {
     );
     // Optionally, emit an event to update the UI in real time
     io.emit("update-message-status", { messageId, userId });
+  });
+
+  // when connect to a new user
+  socket.on("newUser", async (newUser) => {
+    io.emit("onNewUser", newUser);
   });
 
   socket.on("disconnect", () => {

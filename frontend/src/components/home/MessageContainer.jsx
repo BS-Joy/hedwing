@@ -74,9 +74,8 @@ export default function MessageContainer({
       {/* 3dot dropdown */}
       <div
         className={`dropdown dropdown-left ${
-          msg.senderId === authUser._id
-            ? "-left-6 dropdown-end group-hover:block"
-            : "-right-6"
+          msg.senderId === authUser._id &&
+          "-left-6 dropdown-end group-hover:block"
         }  hover:cursor-pointer hidden  absolute`}
       >
         <div tabIndex={0} role="button" className="">
@@ -115,14 +114,16 @@ export default function MessageContainer({
         }`}
       >
         {msg?.edited && <p className="font-lumanosimo text-[8px]">(edited)</p>}
-        <p>
-          {msg?.readBy.includes(authUser._id) &&
-          msg?.readBy.includes(selectedUser._id) ? (
-            <CheckCheck size={12} color="#4fcf00" />
-          ) : (
-            <Check size={12} />
-          )}
-        </p>
+        {msg?.senderId === authUser._id && (
+          <p>
+            {msg?.readBy.includes(authUser._id) &&
+            msg?.readBy.includes(selectedUser._id) ? (
+              <CheckCheck size={12} color="#4fcf00" />
+            ) : (
+              <Check size={12} color="#4fcf00" />
+            )}
+          </p>
+        )}
       </div>
     </div>
   );

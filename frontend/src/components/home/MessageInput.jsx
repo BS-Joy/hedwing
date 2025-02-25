@@ -3,6 +3,7 @@ import { Image, Send, X } from "lucide-react";
 import toast from "react-hot-toast";
 import { useChatStore } from "../../store/useChatStore";
 import TypingIndicator from "./TypingIndicator";
+import { useAuthStore } from "../../store/useAuthStore";
 
 const MessageInput = ({ msg, setMsg }) => {
   const [text, setText] = useState(msg?.text ?? "");
@@ -14,7 +15,12 @@ const MessageInput = ({ msg, setMsg }) => {
     sendTypingStatus,
     selectedUser,
     listenForTypingEvents,
+    getUsers,
+    users,
   } = useChatStore();
+
+  const { authUser } = useAuthStore();
+
   const [isTyping, setIsTyping] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -93,6 +99,10 @@ const MessageInput = ({ msg, setMsg }) => {
           text: text.trim(),
           image: imagePreview,
         });
+
+        if (!users?.some(({ _id }) => _id === selectedUser?._id)) {
+          getUsers(authUser);
+        }
       }
 
       // Clear form

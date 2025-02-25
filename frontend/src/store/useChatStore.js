@@ -68,8 +68,8 @@ export const useChatStore = create((set, get) => ({
         };
       });
 
-      // console.log(refinedUsers);
       set({ users: refinedUsers });
+      set({ selectedUser: refinedUsers[0] });
     } catch (error) {
       toast.error(
         error.response.data.message ||
@@ -91,6 +91,7 @@ export const useChatStore = create((set, get) => ({
       set({ isMessagesLoading: false });
     }
   },
+
   sendMessage: async (messageData) => {
     const onlineUsers = useAuthStore.getState().onlineUsers;
     const socket = useAuthStore.getState().socket;
@@ -101,8 +102,25 @@ export const useChatStore = create((set, get) => ({
         messageData
       );
 
-      set({ messages: [...messages, res.data?.data] });
+      const newMsg = res?.data?.data;
+
+      set({ messages: [...messages, newMsg] });
+
+      // for update seen status
+      if (onlineUsers.includes(selectedUser._id)) {
+        socket.on("update-message-status", ({ messageId, userId }) => {
+          set((state) => ({
+            messages: state.messages.map((msg) => {
+              if (msg._id === messageId && !msg.readBy.includes(userId)) {
+                return { ...msg, readBy: [...msg.readBy, userId] };
+              }
+              return msg;
+            }),
+          }));
+        });
+      }
     } catch (error) {
+      console.log(error);
       toast.error(error.response.data.message);
     }
   },
@@ -137,11 +155,8 @@ export const useChatStore = create((set, get) => ({
     socket.on("newMessage", (newMessage) => {
       const { selectedUser, users } = get();
 
-      // console.log(selectedUser);
-
       // Check if the message is from the currently selected chat
       if (!selectedUser || newMessage.senderId !== selectedUser._id) {
-        console.log("i am here");
         // Update unseen count for the sender
         const updatedUsers = users.map((user) => {
           if (user._id === newMessage.senderId) {
@@ -153,8 +168,6 @@ export const useChatStore = create((set, get) => ({
           }
           return user;
         });
-
-        console.dir(updatedUsers);
 
         // Reorder the list: bring the sender to the top based on lastMessageTime
         updatedUsers.sort((a, b) => {

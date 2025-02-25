@@ -27,6 +27,8 @@ const Sidebar = () => {
     ? users?.filter((user) => onlineUsers?.includes(user?._id))
     : users;
 
+  const filteredUserIds = filteredUsers.map((u) => u._id);
+
   const handleSelectUser = (user) => {
     // Reset unseen count for the selected user
     const updatedUsers = users.map((u) =>
@@ -35,18 +37,9 @@ const Sidebar = () => {
 
     setUsers(updatedUsers);
     setSelectedUser(user);
-
-    // Optionally, send a "message-seen" event for all messages in that chat
-    // messages.forEach((msg) => {
-    //   if (msg.senderId === user._id && !msg.readBy.includes(authUser._id)) {
-    //     socket.emit("message-seen", {
-    //       messageId: msg._id,
-    //       userId: authUser._id,
-    //     });
-    //   }
-    // });
   };
 
+  // for seen unseen messages
   useEffect(() => {
     if (selectedUser && messages.length > 0) {
       messages.forEach((msg) => {
@@ -102,7 +95,12 @@ const Sidebar = () => {
             <span className="text-sm">Show online only</span>
           </label>
           <span className="text-xs text-zinc-500">
-            ({onlineUsers.length - 1} online)
+            {
+              onlineUsers?.filter(
+                (id) => id !== authUser?._id && filteredUserIds.includes(id)
+              )?.length
+            }{" "}
+            online
           </span>
         </div>
       </div>

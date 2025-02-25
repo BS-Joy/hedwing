@@ -2,11 +2,13 @@ import { GiOwl } from "react-icons/gi";
 import { MessageSquareX, Hand } from "lucide-react";
 import { useChatStore } from "../../store/useChatStore";
 import { useAuthStore } from "../../store/useAuthStore";
+import { useEffect } from "react";
+import { axiosInstance } from "../../lib/axios";
 
 export default function NoMessages() {
-  const { getUsers, sendMessage } = useChatStore();
+  const { getUsers, sendMessage, setUsers } = useChatStore();
 
-  const { authUser } = useAuthStore();
+  const { authUser, socket } = useAuthStore();
 
   const sayHi = async () => {
     const text = "Hi";
