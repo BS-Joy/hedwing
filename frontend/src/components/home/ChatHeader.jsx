@@ -7,6 +7,7 @@ import { ModalWrapper } from "../ModalWrapper";
 import { axiosInstance } from "../../lib/axios";
 import toast from "react-hot-toast";
 import { useState } from "react";
+import EmojiPicker from "emoji-picker-react";
 
 const ChatHeader = () => {
   const { selectedUser, setSelectedUser, users, setUsers } = useChatStore();
@@ -86,6 +87,14 @@ const ChatHeader = () => {
               Block
             </button>
           )}
+
+          <EmojiPicker
+            open={false}
+            theme="auto"
+            emojiStyle="facebook"
+            searchDisabled
+            skinTonePickerLocation="PREVIEW"
+          />
 
           {/* chat block confirmation modal */}
           <ModalWrapper>

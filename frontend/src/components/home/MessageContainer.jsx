@@ -1,4 +1,4 @@
-import { EllipsisVertical, Pencil, Trash2 } from "lucide-react";
+import { EllipsisVertical, Pencil, Trash2, SmilePlus } from "lucide-react";
 import { useAuthStore } from "../../store/useAuthStore";
 import { axiosInstance } from "../../lib/axios";
 import toast from "react-hot-toast";
@@ -107,6 +107,16 @@ export default function MessageContainer({
           </li>
         </ul>
       </div>
+
+      {/* add emoji icon */}
+      <div
+        className={`absolute ${
+          msg.senderId !== authUser._id && "-bottom-4 right-0 group-hover:block"
+        } hidden cursor-pointer`}
+      >
+        <SmilePlus size={14} />
+      </div>
+
       {/* chat footer */}
       <div
         className={`chat-footer absolute -bottom-5 left-0 justify-between pr-1 mb-1 w-full ${
