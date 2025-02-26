@@ -69,6 +69,15 @@ export const sendMessage = catchAsync(async (req, res) => {
       users: [senderId, receiverId],
       roomStatus: "okay",
     });
+
+    // 🔥 Emit event to notify receiver about the new chat
+    const receiverSocketId = getReceiverSocketId(receiverId);
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("newChat", {
+        roomId: newRoom._id,
+        senderId,
+      });
+    }
   }
 
   let imageUrl;

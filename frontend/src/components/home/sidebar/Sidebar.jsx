@@ -134,8 +134,9 @@ const Sidebar = () => {
                 />
               )}
 
+              {/* unseen count on small screens */}
               {user.unseenCount > 0 && (
-                <div className="badge badge-primary absolute -top-2 -right-3 size-6 block sm:hidden">
+                <div className="badge badge-primary absolute -top-2 -right-3 size-6 flex justify-center items-center sm:hidden">
                   {user.unseenCount}
                 </div>
               )}

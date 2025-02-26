@@ -2,9 +2,17 @@ import ChatContainer from "./ChatContainer";
 import NoChatSelected from "./NoChatSelected";
 import { useChatStore } from "../../store/useChatStore";
 import Sidebar from "./sidebar/Sidebar";
+import { useEffect } from "react";
 
 const HomePage = () => {
-  const { selectedUser } = useChatStore();
+  const { selectedUser, subscribeToMessages, unsubscribeFromMessages } =
+    useChatStore();
+
+  // useEffect(() => {
+  //   subscribeToMessages(); // ✅ Listen for messages globally
+
+  //   return () => unsubscribeFromMessages();
+  // }, []); // 🔥 Run once when component mounts
 
   return (
     <div className="h-screen bg-base-200">

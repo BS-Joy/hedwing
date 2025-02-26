@@ -69,7 +69,7 @@ export const useChatStore = create((set, get) => ({
       });
 
       set({ users: refinedUsers });
-      set({ selectedUser: refinedUsers[0] });
+      // set({ selectedUser: refinedUsers[0] });
     } catch (error) {
       toast.error(
         error.response.data.message ||
@@ -151,14 +151,24 @@ export const useChatStore = create((set, get) => ({
   },
 
   subscribeToMessages: () => {
-    const socket = useAuthStore.getState().socket;
-    socket.on("newMessage", (newMessage) => {
+    const { socket, authUser } = useAuthStore.getState();
+
+    // 🔥 Listen for new chat event (when a new room is created)
+    socket.on("newChat", async ({ roomId, senderId }) => {
+      console.log("New chat created:", roomId, senderId);
+
+      // 🔥 Fetch the latest users list so user B can see the new chat
+      await get().getUsers(authUser);
+    });
+
+    socket.on("newMessage", async (newMessage) => {
       const { selectedUser, users } = get();
 
       // Check if the message is from the currently selected chat
       if (!selectedUser || newMessage.senderId !== selectedUser._id) {
         // Update unseen count for the sender
         const updatedUsers = users.map((user) => {
+          console.log(user);
           if (user._id === newMessage.senderId) {
             return {
               ...user,

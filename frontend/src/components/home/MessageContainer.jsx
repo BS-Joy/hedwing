@@ -60,6 +60,7 @@ export default function MessageContainer({
       );
     }
   };
+
   return (
     <div className="chat-bubble max-w-[80%] sm:max-w-[50%] relative flex flex-col bg-[#E4D8B4]">
       {msg?.image && (

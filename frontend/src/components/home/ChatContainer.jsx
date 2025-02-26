@@ -20,7 +20,6 @@ export default function ChatContainer() {
     setSelectedUser,
     subscribeToMessages,
     unsubscribeFromMessages,
-    sendMessage,
     users,
     setUsers,
   } = useChatStore();
