@@ -74,7 +74,7 @@ export const sendMessage = catchAsync(async (req, res) => {
     const receiverSocketId = getReceiverSocketId(receiverId);
     if (receiverSocketId) {
       io.to(receiverSocketId).emit("newChat", {
-        roomId: newRoom._id,
+        room: newRoom,
         senderId,
       });
     }

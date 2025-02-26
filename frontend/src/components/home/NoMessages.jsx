@@ -9,6 +9,7 @@ export default function NoMessages() {
     sendMessage,
     subscribeToMessages,
     unsubscribeFromMessages,
+    selectedUser,
   } = useChatStore();
 
   const { authUser, socket } = useAuthStore();
@@ -20,12 +21,14 @@ export default function NoMessages() {
   }, []); // 🔥 Run once when component mounts
 
   const sayHi = async () => {
+    console.log(selectedUser);
     const text = "Hi";
     try {
       await sendMessage({
         text: text.trim(),
       });
 
+      localStorage.setItem("unseen_chats", JSON.stringify([selectedUser]));
       getUsers(authUser);
     } catch (error) {
       console.error("Failed to sayhi:", error);

@@ -155,8 +155,23 @@ export const useChatStore = create((set, get) => ({
     const { socket, authUser } = useAuthStore.getState();
 
     // 🔥 Listen for new chat event (when a new room is created)
-    socket.on("newChat", async ({ roomId, senderId }) => {
+    socket.on("newChat", async ({ room, senderId }) => {
       // console.log("New chat created:", roomId, senderId);
+      const lsChats = JSON.parse(localStorage.getItem("unseen_chats"));
+
+      const newLsChats = lsChats.map((chat) => {
+        if (chat._id === senderId) {
+          chat["roomStauts"] = "okay";
+          chat["roomId"] = room._id;
+          chat["unseenCount"] = 1;
+          chat["blockedBy"] = "";
+          chat["lastMessageTime"] = room.lastMessage.createdAt;
+        }
+
+        return chat;
+      });
+
+      localStorage.setItem("unseen_chats", JSON.stringify(newLsChats));
 
       // 🔥 Fetch the latest users list so user B can see the new chat
       await get().getUsers(authUser);
@@ -164,20 +179,28 @@ export const useChatStore = create((set, get) => ({
 
     socket.on("newMessage", async (newMessage) => {
       const { selectedUser, users } = get();
+      let unseenChats = [];
 
       // Check if the message is from the currently selected chat
       if (!selectedUser || newMessage.senderId !== selectedUser._id) {
         // Update unseen count for the sender
         const updatedUsers = users.map((user) => {
+          console.log(user);
           if (user._id === newMessage.senderId) {
-            return {
+            const withUnseen = {
               ...user,
               unseenCount: (user.unseenCount || 0) + 1,
               lastMessageTime: newMessage.createdAt,
             };
+
+            unseenChats = [...unseenChats, withUnseen];
+
+            return withUnseen;
           }
           return user;
         });
+
+        localStorage.setItem("unseen_chats", JSON.stringify(unseenChats));
 
         // Reorder the list: bring the sender to the top based on lastMessageTime
         updatedUsers.sort((a, b) => {

@@ -4,8 +4,7 @@ import { useChatStore } from "../../store/useChatStore";
 import { useEffect } from "react";
 
 const NoChatSelected = () => {
-  const { selectedUser, subscribeToMessages, unsubscribeFromMessages } =
-    useChatStore();
+  const { subscribeToMessages, unsubscribeFromMessages } = useChatStore();
 
   useEffect(() => {
     subscribeToMessages(); // ✅ Listen for messages globally

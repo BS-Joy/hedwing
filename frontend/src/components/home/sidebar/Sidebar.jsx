@@ -23,14 +23,18 @@ const Sidebar = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
 
+  const unseenChats = JSON.parse(localStorage.getItem("unseen_chats"));
+
   const filteredUsers = showOnlineOnly
     ? users?.filter((user) => onlineUsers?.includes(user?._id))
     : users;
 
+  // console.log(filteredUsers);
+
   const filteredUserIds = filteredUsers.map((u) => u._id);
 
   const handleSelectUser = (user) => {
-    // Reset unseen count for the selected user
+    // Reset unseen count for the selected user in Zustand state
     const updatedUsers = users.map((u) =>
       u._id === user._id ? { ...u, unseenCount: 0 } : u
     );
@@ -38,8 +42,12 @@ const Sidebar = () => {
     setUsers(updatedUsers);
     setSelectedUser(user);
 
-    // ✅ Store updated users in localStorage
-    // localStorage.setItem("chat_users", JSON.stringify(updatedUsers));
+    // ✅ Remove selected user from `unseenChats` in localStorage
+    const lsChats = JSON.parse(localStorage.getItem("unseen_chats")) || [];
+
+    const updatedUnseenChats = lsChats.filter((chat) => chat._id !== user._id);
+
+    localStorage.setItem("unseen_chats", JSON.stringify(updatedUnseenChats));
   };
 
   // for seen unseen messages
@@ -138,9 +146,10 @@ const Sidebar = () => {
               )}
 
               {/* unseen count on small screens */}
-              {user.unseenCount > 0 && (
+              {unseenChats?.find(({ _id }) => _id === user._id)?.unseenCount >
+                0 && (
                 <div className="badge badge-primary absolute -top-2 -right-3 size-6 flex justify-center items-center sm:hidden">
-                  {user.unseenCount}
+                  {unseenChats.find(({ _id }) => _id === user._id)?.unseenCount}
                 </div>
               )}
             </div>
