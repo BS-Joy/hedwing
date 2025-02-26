@@ -72,12 +72,17 @@ export default function ChatContainer() {
   };
 
   useEffect(() => {
-    getMessages(selectedUser?._id);
+    if (!selectedUser?._id) return;
 
+    const fetchMessages = async () => {
+      await getMessages(selectedUser?._id);
+    };
+
+    fetchMessages();
     subscribeToMessages();
 
     return () => unsubscribeFromMessages();
-  }, [selectedUser, getMessages, subscribeToMessages, unsubscribeFromMessages]);
+  }, [selectedUser._id]);
 
   useEffect(() => {
     if (messageEndRef?.current && messages) {
