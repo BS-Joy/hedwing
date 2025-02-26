@@ -37,6 +37,9 @@ const Sidebar = () => {
 
     setUsers(updatedUsers);
     setSelectedUser(user);
+
+    // ✅ Store updated users in localStorage
+    // localStorage.setItem("chat_users", JSON.stringify(updatedUsers));
   };
 
   // for seen unseen messages

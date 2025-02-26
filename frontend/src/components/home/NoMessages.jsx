@@ -1,11 +1,23 @@
 import { MessageSquareX, Hand } from "lucide-react";
 import { useChatStore } from "../../store/useChatStore";
 import { useAuthStore } from "../../store/useAuthStore";
+import { useEffect } from "react";
 
 export default function NoMessages() {
-  const { getUsers, sendMessage } = useChatStore();
+  const {
+    getUsers,
+    sendMessage,
+    subscribeToMessages,
+    unsubscribeFromMessages,
+  } = useChatStore();
 
   const { authUser, socket } = useAuthStore();
+
+  useEffect(() => {
+    subscribeToMessages(); // ✅ Listen for messages globally
+
+    return () => unsubscribeFromMessages();
+  }, []); // 🔥 Run once when component mounts
 
   const sayHi = async () => {
     const text = "Hi";
@@ -13,11 +25,13 @@ export default function NoMessages() {
       await sendMessage({
         text: text.trim(),
       });
+
       getUsers(authUser);
     } catch (error) {
       console.error("Failed to sayhi:", error);
     }
   };
+
   return (
     <div className="w-full flex flex-1 flex-col items-center justify-center p-16 bg-base-100/50">
       <div className="max-w-md text-center space-y-6">

@@ -64,6 +64,7 @@ export const useChatStore = create((set, get) => ({
           ...siUsers,
           roomStatus: chat.roomStatus,
           roomId: chat._id,
+          unseenCount: chat.unseenCount || 0,
           blockedBy: chat?.blockedBy || "",
         };
       });
@@ -155,7 +156,7 @@ export const useChatStore = create((set, get) => ({
 
     // 🔥 Listen for new chat event (when a new room is created)
     socket.on("newChat", async ({ roomId, senderId }) => {
-      console.log("New chat created:", roomId, senderId);
+      // console.log("New chat created:", roomId, senderId);
 
       // 🔥 Fetch the latest users list so user B can see the new chat
       await get().getUsers(authUser);
@@ -168,7 +169,6 @@ export const useChatStore = create((set, get) => ({
       if (!selectedUser || newMessage.senderId !== selectedUser._id) {
         // Update unseen count for the sender
         const updatedUsers = users.map((user) => {
-          console.log(user);
           if (user._id === newMessage.senderId) {
             return {
               ...user,
@@ -185,6 +185,7 @@ export const useChatStore = create((set, get) => ({
             new Date(b.lastMessageTime || 0) - new Date(a.lastMessageTime || 0)
           );
         });
+
         set({ users: updatedUsers });
       } else {
         // If message is from the currently active chat, simply add to messages
