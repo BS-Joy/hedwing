@@ -14,14 +14,13 @@ export default function NoMessages() {
 
   const { authUser, socket } = useAuthStore();
 
-  useEffect(() => {
-    subscribeToMessages(); // ✅ Listen for messages globally
+  // useEffect(() => {
+  //   subscribeToMessages(); // ✅ Listen for messages globally
 
-    return () => unsubscribeFromMessages();
-  }, []); // 🔥 Run once when component mounts
+  //   return () => unsubscribeFromMessages();
+  // }, []); // 🔥 Run once when component mounts
 
   const sayHi = async () => {
-    console.log(selectedUser);
     const text = "Hi";
     try {
       await sendMessage({

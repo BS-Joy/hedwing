@@ -74,7 +74,7 @@ export default function ChatContainer() {
     if (!selectedUser?._id) return;
 
     const fetchMessages = async () => {
-      await getMessages(selectedUser?._id);
+      await getMessages(selectedUser);
     };
 
     fetchMessages();

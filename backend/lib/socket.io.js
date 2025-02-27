@@ -2,6 +2,7 @@ import { Server } from "socket.io";
 import http from "http";
 import express from "express";
 import messageModel from "../models/message.model.js";
+import chatModel from "../models/chat.model.js";
 
 const app = express();
 const server = http.createServer(app);
@@ -51,13 +52,17 @@ io.on("connection", (socket) => {
   socket.on("message-seen", async ({ messageId, userId }) => {
     // console.log({ messageId, userId });
     // Update the message document: add the userId to readBy if not already there
-    await messageModel.findByIdAndUpdate(
+    const updatedMessage = await messageModel.findByIdAndUpdate(
       messageId,
       {
         $addToSet: { readBy: userId },
       },
       { new: true }
     );
+
+    await chatModel.findByIdAndUpdate(updatedMessage?.chatId, {
+      unseenCount: 0,
+    });
     // Optionally, emit an event to update the UI in real time
     io.emit("update-message-status", { messageId, userId });
   });

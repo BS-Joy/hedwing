@@ -2,9 +2,12 @@ import { MessageSquare } from "lucide-react";
 import { GiOwl } from "react-icons/gi";
 import { useChatStore } from "../../store/useChatStore";
 import { useEffect } from "react";
+import { useAuthStore } from "../../store/useAuthStore";
 
 const NoChatSelected = () => {
   const { subscribeToMessages, unsubscribeFromMessages } = useChatStore();
+
+  // const { connectSocket } = useAuthStore();
 
   useEffect(() => {
     subscribeToMessages(); // ✅ Listen for messages globally

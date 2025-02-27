@@ -14,8 +14,9 @@ export const getChatsForSidebar = catchAsync(async (req, res) => {
     .find({
       users: { $in: currentUser }, // Exclude the current user as well as users in the blockList
     })
-    .populate("users")
+    .populate("users lastMessage")
     .select("-password") // Exclude password field
+    .sort({ updatedAt: -1 })
     .lean();
 
   res.status(200).json({
@@ -29,15 +30,20 @@ export const getChatsForSidebar = catchAsync(async (req, res) => {
  * Get messages between two users
  */
 export const getMessages = catchAsync(async (req, res) => {
-  const userToChat = req.params.id;
-  const myId = req.user._id;
+  const chatId = req.params.id;
+
+  if (!chatId) {
+    console.log(chatId);
+    return res.status(200).json({
+      success: true,
+      message: "Messages retrieved successfully.",
+      messages: [],
+    });
+  }
 
   const messages = await messageModel
     .find({
-      $or: [
-        { senderId: myId, receiverId: userToChat },
-        { senderId: userToChat, receiverId: myId },
-      ],
+      chatId,
     })
     .sort({ createdAt: 1 }) // Sort messages by time in ascending order
     .lean();
@@ -46,6 +52,38 @@ export const getMessages = catchAsync(async (req, res) => {
     success: true,
     message: "Messages retrieved successfully.",
     messages,
+  });
+});
+
+/*
+ * Get Unseen messages count
+ */
+export const updateUnseenCount = catchAsync(async (req, res) => {
+  const roomId = req.params.id;
+  const currentUser = req.user._id;
+
+  // console.log({ roomId });
+
+  // 🔥 Find unseen messages for the current user in this chat
+  const unseenMessages = await messageModel.find({
+    chatId: roomId,
+    senderId: { $ne: currentUser }, // Only messages sent by others
+    readBy: { $ne: currentUser }, // Messages not read by currentUser
+  });
+
+  // 🔥 Update the unseenCount in chatModel with the correct count
+  await chatModel.findByIdAndUpdate(
+    roomId,
+    {
+      unseenCount: unseenMessages.length, // ✅ Set unseen count correctly
+    },
+    { new: true }
+  );
+
+  res.status(200).json({
+    success: true,
+    message: "Unseen count updated successfully.",
+    unseenCount: unseenMessages.length,
   });
 });
 
@@ -64,6 +102,7 @@ export const sendMessage = catchAsync(async (req, res) => {
 
   let newRoom;
 
+  // if no room created yet
   if (!room) {
     newRoom = await chatModel.create({
       users: [senderId, receiverId],
@@ -105,6 +144,7 @@ export const sendMessage = catchAsync(async (req, res) => {
     roomId,
     {
       lastMessage: newMessage?._id,
+      // $inc: { unseenCount: 1 }, // 🔥 Increment unseenCount by 1 directly in DB
     },
     { new: true }
   );

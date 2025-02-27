@@ -6,6 +6,7 @@ import {
   getMessages,
   getChatsForSidebar,
   sendMessage,
+  updateUnseenCount,
 } from "../controllers/message.controller.js";
 
 const messageRouter = express.Router();
@@ -18,5 +19,7 @@ messageRouter.post("/send/:id", protectRoute, sendMessage);
 messageRouter.delete("/delete/:msgId", protectRoute, deleteMessage);
 
 messageRouter.patch("/edit", protectRoute, editMessage);
+
+messageRouter.patch("/getUnseenCount/:id", protectRoute, updateUnseenCount);
 
 export default messageRouter;

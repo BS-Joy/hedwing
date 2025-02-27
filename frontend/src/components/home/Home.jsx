@@ -8,11 +8,11 @@ const HomePage = () => {
   const { selectedUser, subscribeToMessages, unsubscribeFromMessages } =
     useChatStore();
 
-  // useEffect(() => {
-  //   subscribeToMessages(); // ✅ Listen for messages globally
+  useEffect(() => {
+    subscribeToMessages(); // ✅ Listen for messages globally
 
-  //   return () => unsubscribeFromMessages();
-  // }, []); // 🔥 Run once when component mounts
+    return () => unsubscribeFromMessages();
+  }, []); // 🔥 Run once when component mounts
 
   return (
     <div className="h-screen bg-base-200">

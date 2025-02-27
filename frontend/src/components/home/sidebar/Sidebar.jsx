@@ -16,6 +16,8 @@ const Sidebar = () => {
     setSelectedUser,
     isUsersLoading,
     messages,
+    newChatUnseen,
+    setNewChatUnseen,
   } = useChatStore();
 
   const { onlineUsers, authUser, socket } = useAuthStore();
@@ -23,7 +25,7 @@ const Sidebar = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
 
-  const unseenChats = JSON.parse(localStorage.getItem("unseen_chats"));
+  // const unseenChats = JSON.parse(localStorage.getItem("unseen_chats"));
 
   const filteredUsers = showOnlineOnly
     ? users?.filter((user) => onlineUsers?.includes(user?._id))
@@ -42,12 +44,14 @@ const Sidebar = () => {
     setUsers(updatedUsers);
     setSelectedUser(user);
 
+    if (newChatUnseen === 1) setNewChatUnseen();
+
     // ✅ Remove selected user from `unseenChats` in localStorage
-    const lsChats = JSON.parse(localStorage.getItem("unseen_chats")) || [];
+    // const lsChats = JSON.parse(localStorage.getItem("unseen_chats")) || [];
 
-    const updatedUnseenChats = lsChats.filter((chat) => chat._id !== user._id);
+    // const updatedUnseenChats = lsChats.filter((chat) => chat._id !== user._id);
 
-    localStorage.setItem("unseen_chats", JSON.stringify(updatedUnseenChats));
+    // localStorage.setItem("unseen_chats", JSON.stringify(updatedUnseenChats));
   };
 
   // for seen unseen messages
@@ -146,22 +150,47 @@ const Sidebar = () => {
               )}
 
               {/* unseen count on small screens */}
-              {unseenChats?.find(({ _id }) => _id === user._id)?.unseenCount >
+
+              {/* {unseenChats?.find(({ _id }) => _id === user._id)?.unseenCount >
                 0 && (
                 <div className="badge badge-primary absolute -top-2 -right-3 size-6 flex justify-center items-center sm:hidden">
                   {unseenChats.find(({ _id }) => _id === user._id)?.unseenCount}
                 </div>
+              )} */}
+
+              {user?.unseenCount > 0 && (
+                <div className="badge badge-primary absolute -top-2 -right-3 size-6 flex justify-center items-center sm:hidden">
+                  {user.unseenCount}
+                </div>
               )}
+
+              {/* {newChatUnseen === 1 && (
+                <div className="badge badge-primary absolute -top-2 -right-3 size-6 flex justify-center items-center sm:hidden">
+                  {newChatUnseen}
+                </div>
+              )} */}
             </div>
 
             {/* User info - only visible on larger screens */}
             <div className="hidden sm:block text-left min-w-0 relative">
               <h4 className="font-medium  font-cinzel">{user.fullName}</h4>
+              {/* {user.unseenCount > 0 && (
+                <div className="badge badge-primary absolute -right-10 top-0 size-6">
+                  {user.unseenCount}
+                </div>
+              )} */}
+
               {user.unseenCount > 0 && (
                 <div className="badge badge-primary absolute -right-10 top-0 size-6">
                   {user.unseenCount}
                 </div>
               )}
+
+              {/* {newChatUnseen === 1 && (
+                <div className="badge badge-primary absolute -right-10 top-0 size-6">
+                  {newChatUnseen}
+                </div>
+              )} */}
               <div className="text-sm text-zinc-400">
                 {onlineUsers?.includes(user._id) ? "Online" : "Offline"}
               </div>

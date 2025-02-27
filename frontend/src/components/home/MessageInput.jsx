@@ -100,9 +100,9 @@ const MessageInput = ({ msg, setMsg }) => {
           image: imagePreview,
         });
 
-        if (!users?.some(({ _id }) => _id === selectedUser?._id)) {
-          getUsers(authUser);
-        }
+        // if (!users?.some(({ _id }) => _id === selectedUser?._id)) {
+        //   getUsers(authUser);
+        // }
       }
 
       // Clear form
