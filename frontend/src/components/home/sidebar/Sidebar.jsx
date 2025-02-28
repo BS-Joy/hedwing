@@ -16,8 +16,6 @@ const Sidebar = () => {
     setSelectedUser,
     isUsersLoading,
     messages,
-    newChatUnseen,
-    setNewChatUnseen,
   } = useChatStore();
 
   const { onlineUsers, authUser, socket } = useAuthStore();
@@ -31,20 +29,26 @@ const Sidebar = () => {
     ? users?.filter((user) => onlineUsers?.includes(user?._id))
     : users;
 
-  // console.log(filteredUsers);
-
   const filteredUserIds = filteredUsers.map((u) => u._id);
 
   const handleSelectUser = (user) => {
     // Reset unseen count for the selected user in Zustand state
     const updatedUsers = users.map((u) =>
-      u._id === user._id ? { ...u, unseenCount: 0 } : u
+      u._id === user._id
+        ? {
+            ...u,
+            unseenCount: {
+              total: 0, // Reset total unseen messages
+              toShow: null, // Reset toShow to null
+            },
+          }
+        : u
     );
 
     setUsers(updatedUsers);
     setSelectedUser(user);
 
-    if (newChatUnseen === 1) setNewChatUnseen();
+    // if (newChatUnseen === 1) setNewChatUnseen();
 
     // ✅ Remove selected user from `unseenChats` in localStorage
     // const lsChats = JSON.parse(localStorage.getItem("unseen_chats")) || [];
@@ -158,11 +162,12 @@ const Sidebar = () => {
                 </div>
               )} */}
 
-              {user?.unseenCount > 0 && (
-                <div className="badge badge-primary absolute -top-2 -right-3 size-6 flex justify-center items-center sm:hidden">
-                  {user.unseenCount}
-                </div>
-              )}
+              {user?.unseenCount?.total > 0 &&
+                user.unseenCount.toShow === authUser._id && (
+                  <div className="badge badge-primary absolute -top-2 -right-3 size-6 flex justify-center items-center sm:hidden">
+                    {user.unseenCount?.total}
+                  </div>
+                )}
 
               {/* {newChatUnseen === 1 && (
                 <div className="badge badge-primary absolute -top-2 -right-3 size-6 flex justify-center items-center sm:hidden">
@@ -180,11 +185,12 @@ const Sidebar = () => {
                 </div>
               )} */}
 
-              {user.unseenCount > 0 && (
-                <div className="badge badge-primary absolute -right-10 top-0 size-6">
-                  {user.unseenCount}
-                </div>
-              )}
+              {user?.unseenCount?.total > 0 &&
+                user.unseenCount.toShow === authUser._id && (
+                  <div className="badge badge-primary absolute -right-10 top-0 size-6">
+                    {user?.unseenCount?.total}
+                  </div>
+                )}
 
               {/* {newChatUnseen === 1 && (
                 <div className="badge badge-primary absolute -right-10 top-0 size-6">

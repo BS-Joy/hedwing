@@ -75,7 +75,10 @@ export const updateUnseenCount = catchAsync(async (req, res) => {
   await chatModel.findByIdAndUpdate(
     roomId,
     {
-      unseenCount: unseenMessages.length, // ✅ Set unseen count correctly
+      unseenCount: {
+        total: unseenMessages.length, // ✅ Total unseen messages
+        toShow: currentUser, // ✅ The sender of the latest unseen message
+      },
     },
     { new: true }
   );
@@ -83,7 +86,7 @@ export const updateUnseenCount = catchAsync(async (req, res) => {
   res.status(200).json({
     success: true,
     message: "Unseen count updated successfully.",
-    unseenCount: unseenMessages.length,
+    unseenCount: { total: unseenMessages.length, toShow: currentUser },
   });
 });
 
@@ -144,7 +147,8 @@ export const sendMessage = catchAsync(async (req, res) => {
     roomId,
     {
       lastMessage: newMessage?._id,
-      // $inc: { unseenCount: 1 }, // 🔥 Increment unseenCount by 1 directly in DB
+      $inc: { "unseenCount.total": 1 }, // 🔥 Increment unseen count by 1
+      $set: { "unseenCount.toShow": receiverId }, // 🔥 Set toShow to the receiver's ID
     },
     { new: true }
   );

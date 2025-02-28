@@ -20,8 +20,14 @@ const chatSchema = new mongoose.Schema(
       ref: "Message",
     },
     unseenCount: {
-      type: Number,
-      default: 0,
+      total: {
+        type: Number,
+        default: 0, // Default unseen count is 0
+      },
+      toShow: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User", // The user for whom unseen messages are shown
+      },
     },
   },
   {

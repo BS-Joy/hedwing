@@ -60,9 +60,16 @@ io.on("connection", (socket) => {
       { new: true }
     );
 
-    await chatModel.findByIdAndUpdate(updatedMessage?.chatId, {
-      unseenCount: 0,
-    });
+    await chatModel.findByIdAndUpdate(
+      updatedMessage?.chatId,
+      {
+        unseenCount: {
+          total: 0, // Reset total unseen messages
+          toShow: null, // Reset the `toShow` (no unread messages to display)
+        },
+      },
+      { new: true }
+    );
     // Optionally, emit an event to update the UI in real time
     io.emit("update-message-status", { messageId, userId });
   });

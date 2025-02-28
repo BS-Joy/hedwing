@@ -14,12 +14,6 @@ export default function NoMessages() {
 
   const { authUser, socket } = useAuthStore();
 
-  // useEffect(() => {
-  //   subscribeToMessages(); // ✅ Listen for messages globally
-
-  //   return () => unsubscribeFromMessages();
-  // }, []); // 🔥 Run once when component mounts
-
   const sayHi = async () => {
     const text = "Hi";
     try {
@@ -27,7 +21,6 @@ export default function NoMessages() {
         text: text.trim(),
       });
 
-      localStorage.setItem("unseen_chats", JSON.stringify([selectedUser]));
       getUsers(authUser);
     } catch (error) {
       console.error("Failed to sayhi:", error);

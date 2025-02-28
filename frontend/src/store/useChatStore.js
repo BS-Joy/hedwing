@@ -70,7 +70,7 @@ export const useChatStore = create((set, get) => ({
           roomStatus: chat.roomStatus,
           roomId: chat._id,
           lastMessage: chat.lastMessage,
-          unseenCount: chat.unseenCount || 0,
+          unseenCount: chat.unseenCount,
           blockedBy: chat?.blockedBy || "",
         };
       });
@@ -90,7 +90,6 @@ export const useChatStore = create((set, get) => ({
   getMessages: async (selectedUser) => {
     set({ isMessagesLoading: true });
     try {
-      console.log(selectedUser);
       if (selectedUser?.roomId) {
         const res = await axiosInstance.get(
           `/messages/${selectedUser?.roomId}`
@@ -109,6 +108,7 @@ export const useChatStore = create((set, get) => ({
     const socket = useAuthStore.getState().socket;
     try {
       const { selectedUser, messages } = get();
+
       const res = await axiosInstance.post(
         `/messages/send/${selectedUser?._id}`,
         messageData
@@ -166,39 +166,14 @@ export const useChatStore = create((set, get) => ({
     const { socket, authUser } = useAuthStore.getState();
 
     socket?.on("newChat", async ({ room, senderId }) => {
-      console.log("New chat created:", room, senderId);
+      // console.log("New chat created:", room, senderId);
       // set({ newChatUnseen: 1 });
 
-      const res = await axiosInstance.patch(
-        `/messages/getUnseenCount/${room._id}`
-      );
+      await axiosInstance.patch(`/messages/getUnseenCount/${room._id}`);
 
       // 🔥 Fetch the latest users list so the receiver can see the new chat
       await get().getUsers(authUser);
     });
-
-    // 🔥 Listen for new chat event (when a new room is created)
-    // socket.on("newChat", async ({ room, senderId }) => {
-    //   // console.log("New chat created:", roomId, senderId);
-    //   // const lsChats = JSON.parse(localStorage.getItem("unseen_chats"));
-
-    //   // const newLsChats = lsChats.map((chat) => {
-    //   //   if (chat._id === senderId) {
-    //   //     chat["roomStauts"] = "okay";
-    //   //     chat["roomId"] = room._id;
-    //   //     chat["unseenCount"] = 1;
-    //   //     chat["blockedBy"] = "";
-    //   //     chat["lastMessageTime"] = room.lastMessage.createdAt;
-    //   //   }
-
-    //   //   return chat;
-    //   // });
-
-    //   // localStorage.setItem("unseen_chats", JSON.stringify(newLsChats));
-
-    //   // 🔥 Fetch the latest users list so user B can see the new chat
-    //   await get().getUsers(authUser);
-    // });
 
     socket?.on("newMessage", async (newMessage) => {
       const { selectedUser, users } = get();
@@ -212,7 +187,6 @@ export const useChatStore = create((set, get) => ({
         );
 
         const updatedUsers = users.map((user) => {
-          console.log(user);
           if (user._id === newMessage.senderId) {
             const withUnseen = {
               ...user,
