@@ -32,6 +32,11 @@ app.use("/api/chat", chatRouter);
 //   });
 // });
 
+app.get("/", (req, res) => {
+  console.log("Server running");
+  res.send("server is running");
+});
+
 server.listen(port, () => {
   console.log("🚀 server is running on port: ", port);
   connectDB();
