@@ -7,7 +7,7 @@ const catchAsync = (fn) => {
         `Error in ${fn.name || "Unknown Function"}:`,
         error.message
       ); // Dynamic logging
-      console.log("Inside catchAsync error.");
+      console.log("Inside catchAsync error:", error);
       res.status(500).json({
         success: false,
         message: "Internal Server Error!",
