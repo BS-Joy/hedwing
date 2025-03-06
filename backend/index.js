@@ -15,7 +15,7 @@ connectDB();
 
 app.use(
   cors({
-    // origin: "https://hedwing.vercel.app",
+    origin: "https://hedwing.vercel.app",
     credentials: true,
   })
 );
