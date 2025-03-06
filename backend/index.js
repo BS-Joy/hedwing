@@ -11,6 +11,8 @@ import chatRouter from "./routes/chat.route.js";
 dotenv.config();
 const port = process.env.PORT || 5001;
 
+connectDB();
+
 app.use(
   cors({
     origin: "https://hedwing.vercel.app/",
