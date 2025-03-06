@@ -7,9 +7,21 @@ import chatModel from "../models/chat.model.js";
 const app = express();
 const server = http.createServer(app);
 
+const allowedOrigins = [
+  "https://hedwing.vercel.app",
+  "http://localhost:5173", // For local development
+];
+
 const io = new Server(server, {
   cors: {
-    origin: ["https://hedwing.vercel.app"],
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
   },
 });
 

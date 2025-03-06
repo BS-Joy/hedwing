@@ -13,9 +13,20 @@ const port = process.env.PORT || 5001;
 
 connectDB();
 
+const allowedOrigins = [
+  "https://hedwing.vercel.app",
+  "http://localhost:5173", // For local development
+];
+
 app.use(
   cors({
-    origin: "https://hedwing.vercel.app",
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
