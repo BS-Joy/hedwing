@@ -14,6 +14,7 @@ export default function LogInForm() {
   const handleFormSubmit = (data) => {
     logIn(data);
   };
+
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
       {/* email */}

@@ -114,8 +114,10 @@ export const loginController = catchAsync(async (req, res) => {
  * User Logout Controller
  */
 export const logoutController = catchAsync(async (req, res) => {
-  res.cookie("jwt", "", {
-    maxAge: 0,
+  res.clearCookie("jwt", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "development",
+    sameSite: "None",
   });
 
   res.status(200).json({
