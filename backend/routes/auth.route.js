@@ -13,7 +13,7 @@ const authRouter = express.Router();
 
 authRouter.post("/signup", signupController);
 authRouter.post("/signin", loginController);
-authRouter.get("/logout", logoutController);
+authRouter.post("/logout", logoutController);
 
 authRouter.patch("/updateProfile", protectRoute, updateProfile);
 
