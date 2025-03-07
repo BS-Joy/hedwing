@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { axiosInstance } from "../lib/axios";
 import { toast } from "react-hot-toast";
 import { io } from "socket.io-client";
+import { Cookies } from "react-cookie";
 
 const baseUrl = "http://localhost:5000";
 
@@ -83,7 +84,14 @@ export const useAuthStore = create((set, get) => ({
   },
   logout: async () => {
     try {
-      await axiosInstance.post("/auth/logout");
+      const cookies = new Cookies();
+      const res = await axiosInstance.post("/auth/logout");
+
+      if (res?.data?.success) {
+        // console.log("I am here");
+        cookies.remove("jwt", { path: "/" });
+        // console.log(cookies.get("jwt"));
+      }
       set({ authUser: null });
       toast.success("Logged out successfully");
       get().disConnectSocket();
