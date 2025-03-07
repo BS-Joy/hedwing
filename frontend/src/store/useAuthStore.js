@@ -4,7 +4,7 @@ import { toast } from "react-hot-toast";
 import { io } from "socket.io-client";
 import { Cookies } from "react-cookie";
 
-const baseUrl = `${process.env.VITE_API_BASE_URL}`;
+const baseUrl = `${import.meta.env.VITE_API_BASE_URL}`;
 
 export const useAuthStore = create((set, get) => ({
   authUser: null,
