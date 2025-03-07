@@ -14,7 +14,7 @@ const port = process.env.PORT || 5001;
 connectDB();
 
 const allowedOrigins = [
-  "https://hedwing.vercel.app",
+  "https://hedwings.netlify.app",
   "http://localhost:5173", // For local development
 ];
 

@@ -8,7 +8,7 @@ const app = express();
 const server = http.createServer(app);
 
 const allowedOrigins = [
-  "https://hedwing.vercel.app",
+  "https://hedwings.netlify.app",
   "http://localhost:5173", // For local development
 ];
 
