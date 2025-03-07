@@ -117,7 +117,7 @@ export const logoutController = catchAsync(async (req, res) => {
   res.clearCookie("jwt", {
     httpOnly: true,
     secure: process.env.NODE_ENV !== "development",
-    sameSite: "none",
+    sameSite: process.env.NODE_ENV !== "development" ? "none" : "strict",
   });
 
   res.status(200).json({
