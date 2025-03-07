@@ -88,9 +88,7 @@ export const useAuthStore = create((set, get) => ({
       const res = await axiosInstance.post("/auth/logout");
 
       if (res?.data?.success) {
-        // console.log("I am here");
         cookies.remove("jwt", { path: "/" });
-        // console.log(cookies.get("jwt"));
       }
       set({ authUser: null });
       toast.success("Logged out successfully");
