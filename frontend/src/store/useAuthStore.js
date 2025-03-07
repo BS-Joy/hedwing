@@ -4,7 +4,10 @@ import { toast } from "react-hot-toast";
 import { io } from "socket.io-client";
 import { Cookies } from "react-cookie";
 
-const baseUrl = `${import.meta.env.VITE_API_BASE_URL}`;
+const baseUrl =
+  import.meta.env.MODE === "development"
+    ? "http://localhost:5000"
+    : "wss://hedwing-backend.vercel.app";
 
 export const useAuthStore = create((set, get) => ({
   authUser: null,
@@ -26,6 +29,7 @@ export const useAuthStore = create((set, get) => ({
       query: {
         userId: authUser?._id,
       },
+      transports: ["websocket"],
     });
 
     socket.connect();
