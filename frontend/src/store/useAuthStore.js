@@ -4,8 +4,8 @@ import { toast } from "react-hot-toast";
 import { io } from "socket.io-client";
 import { Cookies } from "react-cookie";
 
-const baseUrl = "http://localhost:5000";
-// const baseUrl = "https://hedwing.onrender.com";
+// const baseUrl = "http://localhost:5000";
+const baseUrl = "https://hedwing.onrender.com";
 
 export const useAuthStore = create((set, get) => ({
   authUser: null,
