@@ -42,13 +42,18 @@ export const useAuthStore = create((set, get) => ({
 
   // auth related
   checkAuth: async () => {
+    const { authUser } = get();
+    // console.log(authUser);
     try {
       set({ isCheckingAuth: true });
+      if (!authUser) {
+        return;
+      }
       const res = await axiosInstance.get("/auth/checkauth");
       set({ authUser: res.data });
       get().connectSocket();
     } catch (error) {
-      console.log("Error on checkauth: ", error);
+      // console.log("Error on checkauth: ", error);
       set({ authUser: null });
     } finally {
       set({ isCheckingAuth: false });
@@ -77,7 +82,7 @@ export const useAuthStore = create((set, get) => ({
       get().connectSocket();
     } catch (error) {
       toast.error(
-        error?.response?.data?.message || "Something went wrong during log in!"
+        error?.response?.data?.message || "Something went wrong during log in!",
       );
     } finally {
       set({ loginLoading: false });
@@ -96,7 +101,7 @@ export const useAuthStore = create((set, get) => ({
       get().disConnectSocket();
     } catch (error) {
       toast.error(
-        error.response.data.message || "Something went wrong during logout"
+        error.response.data.message || "Something went wrong during logout",
       );
     }
   },
