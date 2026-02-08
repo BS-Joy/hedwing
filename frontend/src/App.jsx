@@ -24,6 +24,10 @@ function App() {
           path: "/profile",
           element: <ProfilePage />,
         },
+        {
+          path: "/settings",
+          element: <SettingsPage />,
+        },
       ],
     },
     {
@@ -40,10 +44,7 @@ function App() {
         },
       ],
     },
-    {
-      path: "/settings",
-      element: <SettingsPage />,
-    },
+
     {
       path: "*", // Catch-all route for 404 errors
       element: <ErrorPage />,
