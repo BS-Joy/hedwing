@@ -9,7 +9,7 @@ const PrivateRoute = ({ children }) => {
     checkAuth();
   }, [checkAuth]);
 
-  console.log(authUser);
+  //   console.log(authUser);
 
   if (!authUser) {
     return <Navigate to="/login" replace />;
