@@ -8,6 +8,8 @@ import LogInPage from "./components/login/LogInPage";
 import ProfilePage from "./components/profile/ProfilePage";
 import SettingsPage from "./components/setting/SettingPage";
 import { useThemeStore } from "./store/useThemeStore";
+import PublicRoute from "./routes/PublicRoute";
+import PrivateRoute from "./routes/PrivateRoute";
 
 function App() {
   const { theme } = useThemeStore();
@@ -18,29 +20,50 @@ function App() {
       children: [
         {
           path: "/",
-          element: <Home />,
+          element: (
+            <PrivateRoute>
+              <Home />
+            </PrivateRoute>
+          ),
         },
         {
           path: "/profile",
-          element: <ProfilePage />,
+          element: (
+            <PrivateRoute>
+              <ProfilePage />
+            </PrivateRoute>
+          ),
         },
         {
           path: "/settings",
-          element: <SettingsPage />,
+          element: (
+            <PrivateRoute>
+              <SettingsPage />
+            </PrivateRoute>
+          ),
         },
       ],
     },
+    // public routes
     {
       element: <PublicLayout />,
       errorElement: <ErrorPage />,
       children: [
         {
           path: "/signup",
-          element: <SignUpPage />,
+          element: (
+            <PublicRoute>
+              <SignUpPage />
+            </PublicRoute>
+          ),
         },
         {
           path: "/login",
-          element: <LogInPage />,
+          element: (
+            <PublicRoute>
+              <LogInPage />
+            </PublicRoute>
+          ),
         },
       ],
     },

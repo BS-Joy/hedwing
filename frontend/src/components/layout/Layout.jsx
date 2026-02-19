@@ -5,23 +5,24 @@ import Navbar from "./Navbar";
 import { useThemeStore } from "../../store/useThemeStore";
 
 export default function Layout() {
-  const { authUser, checkAuth, isCheckingAuth, onlineUsers } = useAuthStore();
+  // const { authUser, checkAuth, isCheckingAuth, onlineUsers } = useAuthStore();
+  // console.log(authUser);
 
-  useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
+  // useEffect(() => {
+  //   checkAuth();
+  // }, [checkAuth]);
 
-  if (isCheckingAuth) {
-    return (
-      <div className="flex justify-center items-center">
-        <span className="loading loading-ring loading-xl"></span>
-      </div>
-    );
-  }
+  // if (isCheckingAuth) {
+  //   return (
+  //     <div className="flex justify-center items-center">
+  //       <span className="loading loading-ring loading-xl"></span>
+  //     </div>
+  //   );
+  // }
 
-  if (!authUser) {
-    return <Navigate to="/login" replace />;
-  }
+  // if (!authUser) {
+  //   return <Navigate to="/login" replace />;
+  // }
 
   return (
     <>

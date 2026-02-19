@@ -2,6 +2,7 @@ import { Mail, Lock } from "lucide-react";
 import { useForm } from "react-hook-form";
 import InputFieldWrapper from "../form/InputFieldWrapper";
 import { useAuthStore } from "../../store/useAuthStore";
+import { useNavigate } from "react-router";
 
 export default function LogInForm() {
   const { logIn, loginLoading } = useAuthStore();
@@ -11,8 +12,10 @@ export default function LogInForm() {
     formState: { errors },
   } = useForm();
 
+  const navigate = useNavigate();
+
   const handleFormSubmit = (data) => {
-    logIn(data);
+    logIn(data, navigate);
   };
 
   return (
